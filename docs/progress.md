@@ -52,6 +52,23 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   `git status --porcelain`); UI shows an amber dot after the branch when uncommitted changes
   exist. `src/main/git.js` + `src/renderer/app.js` (branches map now holds an object).
 
+## v1.8 changes
+- Added: auto-update via `electron-updater` + GitHub Releases. New `src/main/updater.js`
+  (`initAutoUpdate` / `quitAndInstall`); wired in `index.js` on app-ready (`update:status`
+  events → renderer) + IPC `update:install` (stops servers, then `quitAndInstall`). Preload
+  exposes `onUpdateStatus` / `installUpdate`. Renderer shows a top-bar banner
+  (`#updateBar`, `wireUpdates` in `app.js`): "downloading… %" → "ready" + **Restart &
+  Update** button. `package.json`: added `electron-updater` dep, `build.publish` (github,
+  iftekharweb/iv-server-manager), and bumped `version` 1.0.0 → 1.7.0 (was stale; updater
+  compares this against the release feed).
+- Guards: checks run only when `app.isPackaged` — `npm start` and portable builds carry no
+  `app-update.yml`, so they skip silently (feed errors are swallowed, no user-facing noise).
+  Unsigned exe still triggers SmartScreen on each install (code-signing deferred).
+- Publish a release: `set GH_TOKEN=... & npm run dist -- --publish always` (uploads exe +
+  `latest.yml` to a GitHub Release). Must bump `version` each release or nothing updates.
+- Verified: dev boot clean (electron ran ~10s, no stderr, updater skipped as unpackaged);
+  `node --check` passed on all four changed JS files.
+
 ## v1.7 changes
 - Cross-platform support. `shells.js`, `ports.js`, `serverManager.killPidTree`, and
   `config.js` are now platform-aware:

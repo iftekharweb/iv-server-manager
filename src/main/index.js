@@ -8,6 +8,7 @@ const config = require('./config');
 const { availableShells } = require('./shells');
 const { getBranch } = require('./git');
 const ServerManager = require('./serverManager');
+const { initAutoUpdate, quitAndInstall } = require('./updater');
 
 let mainWindow = null;
 let manager = null;
@@ -146,6 +147,13 @@ function registerIpc() {
     if (/^https?:\/\//i.test(String(url || ''))) shell.openExternal(url);
   });
 
+  ipcMain.handle('update:install', async () => {
+    // Stop servers cleanly, then let electron-updater relaunch the app.
+    if (manager && manager.runningIds().length) await manager.stopAll();
+    cleaningUp = true; // before-quit must not re-run stopAll / cancel the quit
+    quitAndInstall();
+  });
+
   ipcMain.handle('logs:save', async (_e, { name, text }) => {
     const safe = String(name || 'server').replace(/[^a-z0-9_-]+/gi, '_');
     const res = await dialog.showSaveDialog(mainWindow, {
@@ -167,6 +175,9 @@ app.whenReady().then(() => {
 
   registerIpc();
   createWindow();
+
+  // Check GitHub Releases for a newer version (packaged NSIS installs only).
+  initAutoUpdate((status, info) => send('update:status', { status, ...info }));
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

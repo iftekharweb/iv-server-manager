@@ -43,6 +43,7 @@ src/main/config.js         load/save servers.json
 src/main/shells.js         shell resolution + Git Bash detection
 src/main/ports.js          find/free/wait on TCP ports (netstat + taskkill)
 src/main/git.js            current branch of a folder
+src/main/updater.js        auto-update via electron-updater + GitHub Releases feed
 src/main/serverManager.js  pty spawn/restart/stop, taskkill trees; scratch terminal (SCRATCH_ID)
 src/preload.js             contextBridge -> window.api
 src/renderer/*             UI (index.html, styles.css, app.js)

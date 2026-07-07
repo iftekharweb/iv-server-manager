@@ -52,7 +52,10 @@ Roughly ordered by value vs. effort. Check items off as they ship.
 - [x] **Dark scrollbars** — replaced default white OS scrollbars with subtle dark thumbs
       (webkit + firefox), including the xterm viewport.
 - [ ] **Code-sign the exe** — removes the SmartScreen "unknown publisher" warning.
-- [ ] **Auto-update** — `electron-updater` + GitHub Releases feed.
+- [x] **Auto-update** — `electron-updater` checks the GitHub Releases feed on launch
+      (packaged NSIS installs only), downloads a newer version in the background, and shows
+      a top-bar banner with a "Restart & Update" button. Publish via `npm run dist --
+      --publish always` with `GH_TOKEN` set. Portable/dev builds skip the check.
 - [ ] **Reduce bundle size** — trim unused Electron locales; consider Tauri if size matters.
 - [ ] **Fix GPU cache warnings** — set a writable `userData`/cache path off OneDrive.
 - [ ] **Tests** — unit tests for `ports.js`, `shells.js`, `git.js`, `config.js`;

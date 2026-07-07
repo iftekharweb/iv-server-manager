@@ -38,6 +38,14 @@ contextBridge.exposeInMainWorld('api', {
   saveLogs: (name, text) => ipcRenderer.invoke('logs:save', { name, text }),
   openExternal: (url) => ipcRenderer.invoke('open:external', url),
 
+  // --- auto-update ---
+  installUpdate: () => ipcRenderer.invoke('update:install'),
+  onUpdateStatus: (cb) => {
+    const h = (_e, payload) => cb(payload);
+    ipcRenderer.on('update:status', h);
+    return () => ipcRenderer.removeListener('update:status', h);
+  },
+
   // --- events (main -> renderer) ---
   onData: (cb) => {
     const h = (_e, payload) => cb(payload);

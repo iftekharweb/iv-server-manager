@@ -54,6 +54,22 @@ html, body {
 .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 .logo { color: var(--accent); font-size: 16px; }
 .top-actions { display: flex; align-items: center; gap: 8px; }
+
+/* Auto-update banner (center of top bar) */
+.update-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+  padding: 3px 10px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: #1a2338;
+  font-size: 12px;
+}
+.update-bar.hidden { display: none; }
+.update-text { color: #a9c2ff; white-space: nowrap; }
+.update-bar .btn { padding: 3px 9px; font-size: 12px; }
 .divider { width: 1px; height: 22px; background: var(--border); margin: 0 4px; }
 .shell-label { color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
 
