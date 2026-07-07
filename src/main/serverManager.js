@@ -86,6 +86,28 @@ class ServerManager {
     });
   }
 
+  /**
+   * Start (or restart) the ad-hoc scratch terminal: an interactive shell with no
+   * command, in the given folder. Tracked under the reserved id SCRATCH_ID and
+   * streamed through the same onData/onState pipeline.
+   * @param {"cmd"|"powershell"|"bash"} shell
+   * @param {string} folder
+   */
+  async startScratch(shell, folder) {
+    await this.stop(ServerManager.SCRATCH_ID);
+    this.start({
+      id: ServerManager.SCRATCH_ID,
+      name: 'Terminal',
+      folder: folder || process.cwd(),
+      command: '', // no command → interactive shell
+      shell: ['cmd', 'powershell', 'bash'].includes(shell) ? shell : 'cmd',
+    });
+  }
+
+  stopScratch() {
+    return this.stop(ServerManager.SCRATCH_ID);
+  }
+
   /** Forward keystrokes / input from the UI into the pty. */
   write(id, data) {
     const entry = this.procs.get(id);
@@ -190,5 +212,8 @@ class ServerManager {
     await this.startAll(servers);
   }
 }
+
+// Reserved id for the ad-hoc scratch terminal (not a configured server).
+ServerManager.SCRATCH_ID = '__scratch__';
 
 module.exports = ServerManager;

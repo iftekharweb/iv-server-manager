@@ -43,10 +43,15 @@ src/main/config.js         load/save servers.json
 src/main/shells.js         shell resolution + Git Bash detection
 src/main/ports.js          find/free/wait on TCP ports (netstat + taskkill)
 src/main/git.js            current branch of a folder
-src/main/serverManager.js  pty spawn/restart/stop, taskkill trees
+src/main/serverManager.js  pty spawn/restart/stop, taskkill trees; scratch terminal (SCRATCH_ID)
 src/preload.js             contextBridge -> window.api
 src/renderer/*             UI (index.html, styles.css, app.js)
 ```
+
+## Features
+Run/restart/stop servers (+ all), interactive live logs (copy/clear/save), per-server shell,
+drag-reorder, per-server git branch + dirty dot, free port on stop/restart, and a collapsible
+right-docked **scratch terminal** for ad-hoc commands (opens in active server's folder/shell).
 
 ## Architecture (one line)
 Electron main process owns server lifecycle via node-pty; renderer is a sandboxed UI with

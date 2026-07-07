@@ -205,4 +205,65 @@ html, body {
 .form-error { color: var(--red); min-height: 16px; font-size: 12px; margin-bottom: 6px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
 
+/* ---------- Scratch terminal dock ---------- */
+.scratch-dock {
+  position: relative;
+  flex: 0 0 auto;
+  width: 42vw;
+  max-width: 50vw;
+  min-width: 300px;
+  background: #0d0f14;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.scratch-dock.collapsed {
+  width: 36px;
+  min-width: 36px;
+}
+.scratch-resizer {
+  position: absolute;
+  left: -3px; top: 0; bottom: 0;
+  width: 6px;
+  cursor: col-resize;
+  z-index: 5;
+}
+.scratch-resizer:hover { background: var(--accent); opacity: .5; }
+.scratch-dock.collapsed .scratch-resizer { display: none; }
+
+.scratch-rail {
+  display: none;
+  width: 36px;
+  height: 100%;
+  border: none;
+  background: var(--bg-2);
+  color: var(--text-dim);
+  cursor: pointer;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 12px;
+  letter-spacing: .08em;
+}
+.scratch-rail:hover { background: var(--bg-3); color: var(--text); }
+.scratch-dock.collapsed .scratch-rail { display: block; }
+.scratch-dock.collapsed .scratch-body { display: none; }
+
+.scratch-body { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.scratch-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border-bottom: 1px solid var(--border); background: var(--bg-2);
+  gap: 8px;
+}
+.scratch-title { display: flex; align-items: baseline; gap: 8px; font-weight: 600; min-width: 0; }
+.scratch-cwd {
+  color: var(--text-dim); font-weight: 400; font-size: 11px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: rtl;
+  max-width: 40vw;
+}
+.scratch-actions { display: flex; gap: 6px; flex: 0 0 auto; }
+#scratchReopen { border-color: var(--accent); color: #a9c2ff; }
+.scratch-term { flex: 1 1 auto; min-height: 0; padding: 6px 4px 4px 8px; }
+.scratch-term .xterm { height: 100%; }
+
 .hidden { display: none !important; }

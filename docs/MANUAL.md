@@ -92,6 +92,18 @@ Example (IVTrip backend):
 ### Default shell
 - The top-bar **Default shell** dropdown sets which shell new servers start with.
 
+### Scratch terminal (run ad-hoc commands)
+A collapsible terminal is docked on the right edge for one-off commands (install a package,
+switch a branch, run a migration) — separate from the per-server log terminals.
+- Click the vertical **⌨ Terminal** rail on the right to expand it (drag its left edge to
+  resize, up to half the window). **⇥ Hide** minimizes it back; the shell keeps running.
+- It opens in the **active server's folder** using that server's **shell** (falls back to the
+  global default shell / home dir when no server is selected).
+- It's a full interactive shell — type any command, Ctrl+C, etc. Anything you do that changes
+  the repo (e.g. `git switch`) is reflected in that server's branch indicator within seconds.
+- Select a different server while it's open and a **⟳ reopen in &lt;server&gt;** button appears —
+  click it to restart the scratch shell in that server's folder. **✕ Clear** clears the view.
+
 ### Quitting
 - Closing the window stops **all** running servers and kills their full process trees
   (so no orphan `node`/`yarn` processes are left behind).

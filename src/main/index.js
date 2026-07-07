@@ -127,6 +127,9 @@ function registerIpc() {
   ipcMain.on('server:input', (_e, { id, data }) => manager.write(id, data));
   ipcMain.on('server:resize', (_e, { id, cols, rows }) => manager.resize(id, cols, rows));
 
+  ipcMain.handle('scratch:start', (_e, { shell, folder }) => manager.startScratch(shell, folder));
+  ipcMain.handle('scratch:stop', () => manager.stopScratch());
+
   ipcMain.handle('clipboard:write', (_e, text) => {
     clipboard.writeText(text || '');
     return true;

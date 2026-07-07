@@ -70,11 +70,12 @@ function availableShells() {
  * @returns {{file: string, args: string[]}}
  */
 function resolveShell(shell, command) {
+  const hasCmd = String(command || '').trim().length > 0;
   switch (shell) {
     case 'powershell':
       return {
         file: 'powershell.exe',
-        args: ['-NoLogo', '-NoExit', '-Command', command],
+        args: hasCmd ? ['-NoLogo', '-NoExit', '-Command', command] : ['-NoLogo', '-NoExit'],
       };
     case 'bash': {
       const bash = findGitBash();
@@ -82,14 +83,14 @@ function resolveShell(shell, command) {
       // -i keeps it interactive; run command then drop to shell so it stays open.
       return {
         file: bash,
-        args: ['-l', '-i', '-c', `${command}; exec bash -i`],
+        args: hasCmd ? ['-l', '-i', '-c', `${command}; exec bash -i`] : ['-l', '-i'],
       };
     }
     case 'cmd':
     default:
       return {
         file: 'cmd.exe',
-        args: ['/d', '/k', command],
+        args: hasCmd ? ['/d', '/k', command] : ['/k'],
       };
   }
 }

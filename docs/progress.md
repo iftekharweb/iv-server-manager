@@ -52,6 +52,14 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   `git status --porcelain`); UI shows an amber dot after the branch when uncommitted changes
   exist. `src/main/git.js` + `src/renderer/app.js` (branches map now holds an object).
 
+## v1.4 changes
+- Added: collapsible scratch terminal docked right (`#scratchDock`). Interactive shell for
+  ad-hoc commands, opens in active server's folder + shell (fallback default). Expand via
+  rail, drag left edge to resize (≤50vw), Hide minimizes (pty stays alive). "reopen in
+  <server>" when active server changes. Reuses pty pipeline under reserved id `__scratch__`
+  (`ServerManager.SCRATCH_ID`); `resolveShell` now supports empty command = interactive shell.
+  New IPC `scratch:start`/`scratch:stop`. Verified: interactive cmd shell echoes typed input.
+
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
   original node-pty failed: VS Build Tools C++ workload absent).

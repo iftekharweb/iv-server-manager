@@ -59,6 +59,26 @@
             <div id="noTerm" class="no-term">Select a server, then press Run to see its live output here.</div>
           </div>
         </main>
+
+        <!-- Collapsible ad-hoc scratch terminal -->
+        <section id="scratchDock" class="scratch-dock collapsed">
+          <div id="scratchResizer" class="scratch-resizer" title="Drag to resize"></div>
+          <button id="scratchRail" class="scratch-rail" title="Open a terminal">⌨ Terminal</button>
+          <div class="scratch-body">
+            <div class="scratch-head">
+              <div class="scratch-title">
+                <span>⌨ Terminal</span>
+                <span id="scratchCwd" class="scratch-cwd"></span>
+              </div>
+              <div class="scratch-actions">
+                <button id="scratchReopen" class="btn btn-ghost hidden" title="Reopen here"></button>
+                <button id="scratchClear" class="btn btn-ghost" title="Clear">✕ Clear</button>
+                <button id="scratchCollapse" class="btn btn-ghost" title="Minimize">⇥ Hide</button>
+              </div>
+            </div>
+            <div id="scratchTerm" class="scratch-term"></div>
+          </div>
+        </section>
       </div>
     </div>
 

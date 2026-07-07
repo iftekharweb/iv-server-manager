@@ -25,6 +25,11 @@ contextBridge.exposeInMainWorld('api', {
   sendInput: (id, data) => ipcRenderer.send('server:input', { id, data }),
   resize: (id, cols, rows) => ipcRenderer.send('server:resize', { id, cols, rows }),
 
+  // --- scratch (ad-hoc) terminal ---
+  scratchStart: (shell, folder) => ipcRenderer.invoke('scratch:start', { shell, folder }),
+  scratchStop: () => ipcRenderer.invoke('scratch:stop'),
+  scratchId: '__scratch__',
+
   // --- logs / clipboard ---
   copyText: (text) => ipcRenderer.invoke('clipboard:write', text),
   saveLogs: (name, text) => ipcRenderer.invoke('logs:save', { name, text }),
