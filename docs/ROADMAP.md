@@ -10,8 +10,8 @@ Roughly ordered by value vs. effort. Check items off as they ship.
       header; flat list when no groups exist.
 - [ ] **Status bar counts** — "3 running / 4" summary in the top bar.
 - [x] **Confirm before Stop All / Restart All** — confirm dialog guards the mass actions.
-- [ ] **Auto-detect port from command** — parse trailing number (e.g. `yarn dev 7003`) as a
-      default for the Port field.
+- [x] **Auto-detect port from command** — parses `-p/--port` flag or a trailing number
+      (e.g. `yarn dev 7003`) to auto-fill the Port field.
 - [ ] **Copy only selection** — Copy button currently copies the whole buffer; add
       "copy selection" when text is selected in the terminal.
 - [ ] **Search within logs** — xterm search addon (`@xterm/addon-search`), Ctrl+F.
