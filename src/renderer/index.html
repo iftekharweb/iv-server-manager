@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IV Server Manager</title>
+    <link rel="stylesheet" href="../../node_modules/@xterm/xterm/css/xterm.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Top bar -->
+      <header class="topbar">
+        <div class="brand">
+          <span class="logo">▚</span>
+          <span class="brand-name">IV Server Manager</span>
+        </div>
+        <div class="top-actions">
+          <button id="runAll" class="btn btn-run" title="Start every server">▶ Run All</button>
+          <button id="restartAll" class="btn btn-restart" title="Restart every server">⟳ Restart All</button>
+          <button id="stopAll" class="btn btn-stop" title="Stop every server">■ Stop All</button>
+          <span class="divider"></span>
+          <label class="shell-label">Default shell
+            <select id="defaultShell" class="select">
+              <option value="cmd">cmd</option>
+              <option value="powershell">powershell</option>
+              <option value="bash">bash</option>
+            </select>
+          </label>
+          <button id="addServer" class="btn btn-add" title="Add a new server">+ Add Server</button>
+        </div>
+      </header>
+
+      <div class="body">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="sidebar-head">Servers <span id="serverCount" class="count">0</span></div>
+          <ul id="serverList" class="server-list"></ul>
+          <div id="emptyHint" class="empty-hint">
+            No servers yet.<br />Click <b>+ Add Server</b> to create one.
+          </div>
+        </aside>
+
+        <!-- Terminal panel -->
+        <main class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <span id="activeDot" class="dot dot-off"></span>
+              <span id="activeName">No server selected</span>
+              <span id="activeMeta" class="meta"></span>
+            </div>
+            <div class="panel-actions">
+              <button id="copyLogs" class="btn btn-ghost" title="Copy all logs to clipboard">⧉ Copy</button>
+              <button id="clearLogs" class="btn btn-ghost" title="Clear the view">✕ Clear</button>
+              <button id="saveLogs" class="btn btn-ghost" title="Save logs to a file">⤓ Save</button>
+            </div>
+          </div>
+          <div id="terminals" class="terminals">
+            <div id="noTerm" class="no-term">Select a server, then press Run to see its live output here.</div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Add/Edit modal -->
+    <div id="modalOverlay" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-head" id="modalTitle">Add Server</div>
+        <form id="serverForm">
+          <input type="hidden" id="fId" />
+          <label class="field">
+            <span>Name</span>
+            <input id="fName" type="text" placeholder="backend" required autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>Folder</span>
+            <div class="folder-row">
+              <input id="fFolder" type="text" placeholder="C:\path\to\project" autocomplete="off" />
+              <button type="button" id="browseFolder" class="btn btn-ghost">Browse…</button>
+            </div>
+          </label>
+          <label class="field">
+            <span>Command</span>
+            <input id="fCommand" type="text" placeholder="yarn dev" required autocomplete="off" />
+          </label>
+          <div class="field-row">
+            <label class="field">
+              <span>Shell</span>
+              <select id="fShell" class="select">
+                <option value="cmd">cmd</option>
+                <option value="powershell">powershell</option>
+                <option value="bash">bash</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Port <small>(optional)</small></span>
+              <input id="fPort" type="text" placeholder="5000" autocomplete="off" />
+            </label>
+          </div>
+          <div class="field-hint">
+            Port is freed (killed PC-wide) when you Stop or Restart this server. Separate
+            multiple with commas, e.g. <code>5000, 5173</code>.
+          </div>
+          <div id="formError" class="form-error"></div>
+          <div class="modal-actions">
+            <button type="button" id="cancelModal" class="btn btn-ghost">Cancel</button>
+            <button type="submit" class="btn btn-run">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="../../node_modules/@xterm/xterm/lib/xterm.js"></script>
+    <script src="../../node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

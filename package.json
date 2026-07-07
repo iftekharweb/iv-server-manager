@@ -1,0 +1,53 @@
+{
+  "name": "iv-server-manager",
+  "productName": "IV Server Manager",
+  "version": "1.0.0",
+  "description": "Desktop app to run, restart, and view logs for any dev server.",
+  "main": "src/main/index.js",
+  "author": "ImpleVista",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "@lydell/node-pty": "1.2.0-beta.12",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0"
+  },
+  "build": {
+    "appId": "com.implevista.ivservermanager",
+    "productName": "IV Server Manager",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ],
+    "asarUnpack": [
+      "node_modules/@lydell/**/*"
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "portable": {
+      "artifactName": "IV-Server-Manager-Portable.exe"
+    }
+  }
+}

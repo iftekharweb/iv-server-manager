@@ -1,0 +1,304 @@
+# IV Server Manager — User & Developer Manual
+
+A standalone Windows desktop app to run, restart, and watch logs for any dev server
+from one window. Replaces the manual `iv_trip_servers.bat` / Windows-Terminal-tabs
+workflow.
+
+- **Tech**: Electron (Node + HTML/CSS/JS)
+- **Terminal engine**: `@lydell/node-pty` (real pseudo-terminal, prebuilt — no compiler needed)
+- **Display**: `@xterm/xterm`
+- **Packaging**: `electron-builder` → Windows `.exe`
+
+---
+
+## 1. Table of contents
+1. [Running the app](#2-running-the-app)
+2. [Using the app](#3-using-the-app)
+3. [Where your data lives](#4-where-your-data-lives)
+4. [Shells (cmd / powershell / bash)](#5-shells-cmd--powershell--bash)
+5. [Developing & running from source](#6-developing--running-from-source)
+6. [Building the .exe (and rebuilding after updates)](#7-building-the-exe-and-rebuilding-after-updates)
+7. [Project structure](#8-project-structure)
+8. [How it works (architecture)](#9-how-it-works-architecture)
+9. [Making common changes](#10-making-common-changes)
+10. [Troubleshooting](#11-troubleshooting)
+
+---
+
+## 2. Running the app
+
+You have three ways to run it. All live in the `dist/` folder after a build.
+
+| Option | File | Notes |
+|--------|------|-------|
+| **Portable (recommended)** | `dist\IV-Server-Manager-Portable.exe` | Single file. Double-click to run. Nothing installed. |
+| **Installer** | `dist\IV Server Manager Setup 1.0.0.exe` | Installs to your machine, adds Start-menu + desktop shortcuts, lets you pick the folder. |
+| **Folder build** | `dist\win-unpacked\IV Server Manager.exe` | The unpacked app (whole folder must stay together). Useful for debugging a packaged build. |
+
+> Windows SmartScreen may warn "unknown publisher" because the app is **not code-signed**.
+> Click **More info → Run anyway**. This is expected for an unsigned in-house tool.
+
+---
+
+## 3. Using the app
+
+### Add a server
+1. Click **+ Add Server** (top-right).
+2. Fill in:
+   - **Name** — label shown in the sidebar (e.g. `backend`).
+   - **Folder** — the project directory. Use **Browse…** to pick it.
+   - **Command** — what to run there (e.g. `yarn dev`, `npm start`, `yarn admin`).
+   - **Shell** — `cmd`, `powershell`, or `bash`.
+   - **Port** *(optional)* — the port this server listens on (e.g. `5000`). When set, the
+     app frees this port PC-wide whenever you Stop or Restart the server, so an orphaned
+     child process can't keep it bound ("port already in use"). Separate multiple with
+     commas: `5000, 5173`.
+3. **Save**. The server appears in the left sidebar and is saved permanently.
+
+> **Reorder:** drag a server card (grab the ⠿ handle) up or down in the sidebar to change
+> the order. The new order is saved automatically.
+
+Example (IVTrip backend):
+- Name `backend`
+- Folder `C:\Users\iftek\OneDrive\Desktop\ImpleVista\IVTrip\iv_trip_backend`
+- Command `yarn dev`
+- Shell `cmd`
+
+### Run / Restart / Stop
+- **Per server** — use the buttons on each sidebar card: `▶ Run`, `⟳` (restart), `■` (stop).
+- **All at once** — top bar: **▶ Run All**, **⟳ Restart All**, **■ Stop All**.
+- Status dot: 🟢 running · ⚪ stopped · 🔴 error.
+
+### View / copy / save logs
+- Click a server to open its **live terminal** in the main panel.
+- The terminal is **interactive** — click into it and type, paste, or press **Ctrl+C** to
+  signal the running process.
+- Panel buttons:
+  - **⧉ Copy** — copies the full log buffer to the clipboard (ANSI colors stripped).
+  - **✕ Clear** — clears the view.
+  - **⤓ Save** — saves the logs to a `.log` file you choose.
+
+### Edit / delete
+- **✎** edits a server (same form). **🗑** deletes it (asks for confirmation; stops it first if running).
+
+### Default shell
+- The top-bar **Default shell** dropdown sets which shell new servers start with.
+
+### Quitting
+- Closing the window stops **all** running servers and kills their full process trees
+  (so no orphan `node`/`yarn` processes are left behind).
+
+---
+
+## 4. Where your data lives
+
+Your server list is stored as JSON here:
+
+```
+%APPDATA%\iv-server-manager\servers.json
+```
+
+(Full path: `C:\Users\<you>\AppData\Roaming\iv-server-manager\servers.json`.)
+
+Shape:
+```json
+{
+  "defaultShell": "cmd",
+  "servers": [
+    { "id": "srv_...", "name": "backend", "folder": "C:\\...\\iv_trip_backend", "command": "yarn dev", "shell": "cmd", "port": "5000" }
+  ]
+}
+```
+
+- Survives app updates and reinstalls (it's outside the app folder).
+- Safe to hand-edit while the app is **closed**. If the file is ever corrupted, the app
+  backs it up as `servers.json.corrupt-<timestamp>` and starts fresh — it won't fail to open.
+- To reset the app completely, delete this file.
+
+---
+
+## 5. Shells (cmd / powershell / bash)
+
+Each server picks its own shell.
+
+| Shell | Runs as |
+|-------|---------|
+| `cmd` | `cmd.exe /d /k <command>` |
+| `powershell` | `powershell.exe -NoLogo -NoExit -Command <command>` |
+| `bash` | Git Bash `bash.exe -l -i -c "<command>; exec bash -i"` |
+
+**Bash requires Git for Windows.** The app auto-detects `bash.exe` at the usual install
+locations and via `where git`. If Git isn't installed, the `bash` option shows
+`bash (not found)` and is disabled. Install Git for Windows to enable it.
+
+---
+
+## 6. Developing & running from source
+
+Prerequisites: **Node.js** (v18+; built/tested on v22) and **npm**.
+
+```bash
+# from the project root: C:\Users\iftek\OneDrive\Desktop\ImpleVista\custom-terminal
+npm install        # installs Electron, node-pty (prebuilt), xterm
+npm start          # launches the app in dev mode
+```
+
+`npm start` runs `electron .` — the same app, loaded live from `src/`. Edit files, then
+close and re-run `npm start` to see changes. (There's no hot-reload; just relaunch.)
+
+---
+
+## 7. Building the .exe (and rebuilding after updates)
+
+Whenever you change the code and want a fresh `.exe`:
+
+```bash
+npm run dist
+```
+
+This runs `electron-builder --win` and produces, in `dist/`:
+- `IV-Server-Manager-Portable.exe` (single-file portable)
+- `IV Server Manager Setup 1.0.0.exe` (installer)
+- `win-unpacked/` (folder build)
+
+Other build scripts:
+```bash
+npm run dist:portable   # only the portable single-file exe (faster)
+```
+
+### One-time requirement: Windows Developer Mode
+`electron-builder` downloads a helper (`winCodeSign`) that extracts files containing
+**symbolic links**. Windows blocks creating symlinks unless you either:
+
+- **Enable Developer Mode** — Settings ▸ System ▸ For developers ▸ **Developer Mode → ON**
+  (do this once; then normal `npm run dist` works), **or**
+- **Build from an elevated (Administrator) terminal**.
+
+If neither is set, the single-file build fails with
+`Cannot create symbolic link : A required privilege is not held`. The folder build
+(`win-unpacked`) still works without this.
+
+### Releasing a new version
+1. Make your code changes.
+2. Bump the version in `package.json` (`"version": "1.0.1"`). The installer filename tracks it.
+3. `npm run dist`.
+4. Share `dist\IV-Server-Manager-Portable.exe` (or the installer).
+
+### Changing the app icon
+The icon is `assets/icon.ico`, generated by `scripts/gen-icon.js` (a plain terminal
+chevron on a dark tile). To use your own icon, replace `assets/icon.ico` with a real
+`.ico` (256×256 recommended), then rebuild. To regenerate the placeholder:
+```bash
+node scripts/gen-icon.js
+```
+
+---
+
+## 8. Project structure
+
+```
+custom-terminal/
+├─ package.json            # deps, scripts, electron-builder config
+├─ README.md               # quick start
+├─ docs/
+│  ├─ MANUAL.md            # this file
+│  ├─ plan.md              # design summary
+│  └─ progress.md          # build status log
+├─ assets/
+│  └─ icon.ico             # app + exe icon (generated)
+├─ scripts/
+│  └─ gen-icon.js          # regenerates icon.ico, no deps
+├─ src/
+│  ├─ main/                # Electron MAIN process (Node)
+│  │  ├─ index.js          # window bootstrap + IPC handlers + quit cleanup
+│  │  ├─ config.js         # load/save servers.json
+│  │  ├─ shells.js         # shell resolution + Git Bash detection
+│  │  └─ serverManager.js  # pty spawn/restart/stop, taskkill trees
+│  ├─ preload.js           # secure bridge → window.api
+│  └─ renderer/            # the UI (runs in the window)
+│     ├─ index.html        # layout
+│     ├─ styles.css        # dark theme
+│     └─ app.js            # list rendering, xterm terminals, modal, buttons
+└─ dist/                   # build output (created by npm run dist)
+```
+
+---
+
+## 9. How it works (architecture)
+
+Electron splits into two worlds; they talk over **IPC**:
+
+- **Main process** (`src/main/`) — full Node access. Owns server lifecycle: spawns each
+  server in a real pseudo-terminal (`node-pty`) in the server's folder using the chosen
+  shell, streams output back, reads/writes the config file, and kills process trees.
+- **Renderer** (`src/renderer/`) — the GUI. Sandboxed (no direct Node access). It renders
+  the sidebar and an `xterm.js` terminal per server, and forwards keystrokes to the pty.
+- **Preload** (`src/preload.js`) — the only bridge. Exposes a small, safe `window.api`
+  (e.g. `api.start(id)`, `api.saveServer(...)`, `api.onData(cb)`) so the renderer never
+  touches Node directly. This is the secure Electron pattern (`contextIsolation: true`,
+  `nodeIntegration: false`).
+
+Data flow for "Run backend":
+```
+click Run → api.start(id) → IPC → serverManager.start() → node-pty spawns shell in folder
+        ← IPC 'server:data' (live output) ← pty.onData ←──────────────────────────┘
+renderer writes output into that server's xterm terminal
+```
+
+Stopping kills the whole tree with `taskkill /PID <pid> /T /F`, because `yarn`/`npm`
+launch child `node` processes that a plain kill would orphan.
+
+---
+
+## 10. Making common changes
+
+| I want to… | Do this |
+|------------|---------|
+| Change window size / title | `src/main/index.js` → `new BrowserWindow({ width, height, title })` |
+| Add a new shell type | `src/main/shells.js` → add a case in `resolveShell` + option in the two `<select>`s in `index.html` |
+| Change colors / theme | `src/renderer/styles.css` (`:root` variables) and `XTERM_THEME` in `src/renderer/app.js` |
+| Change how much log is kept for Copy/Save | `MAX_BUFFER` in `src/renderer/app.js` |
+| Add a button / UI element | markup in `src/renderer/index.html`, wire it in `src/renderer/app.js`, add any IPC in `preload.js` + `src/main/index.js` |
+| Change config location/shape | `src/main/config.js` |
+
+After any change: `npm start` to test, then `npm run dist` to rebuild the exe.
+
+---
+
+## 11. Troubleshooting
+
+**"Windows protected your PC" / unknown publisher**
+Expected — the app isn't code-signed. Click **More info → Run anyway**.
+
+**Build fails: `Cannot create symbolic link : A required privilege is not held`**
+Enable Windows Developer Mode, or run `npm run dist` from an Administrator terminal.
+See [section 7](#7-building-the-exe-and-rebuilding-after-updates).
+
+**`bash` option is greyed out / "not found"**
+Git for Windows isn't installed (or not in a standard location). Install it from
+git-scm.com; the app auto-detects `bash.exe` on next launch.
+
+**A server won't start / immediately exits**
+- Check the terminal panel — the process's own error prints there.
+- Verify the **Folder** exists and the **Command** works when you run it manually in that
+  folder. If the folder is missing, the app warns and falls back to the app's directory.
+
+**"Port already in use" after restarting a server**
+Set the server's **Port** field (Edit ▸ Port). On Stop/Restart the app then kills whatever
+process is listening on that port PC-wide, not just the process tree it launched — this
+clears orphaned `nodemon`/`node` children. Without a port set, only the launched tree is
+killed, which can miss a reparented child.
+
+**Orphan `node`/`yarn` processes after quitting**
+Shouldn't happen — the app runs `taskkill /T` on stop and quit. If you force-kill the app
+via Task Manager, cleanup is skipped; stop servers with **Stop All** before quitting.
+
+**`npm install` fails building `node-pty`**
+This project uses `@lydell/node-pty` (prebuilt binaries) specifically to avoid needing a
+C++ compiler. If you switched back to plain `node-pty`, you'd need Visual Studio Build
+Tools with the "Desktop development with C++" workload. Stay on `@lydell/node-pty`.
+
+**Changes don't show up**
+There's no hot reload. Close the app and run `npm start` again. For the exe, run
+`npm run dist` again.
+```
