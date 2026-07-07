@@ -19,6 +19,9 @@ contextBridge.exposeInMainWorld('api', {
   runAll: () => ipcRenderer.invoke('server:runAll'),
   stopAll: () => ipcRenderer.invoke('server:stopAll'),
   restartAll: () => ipcRenderer.invoke('server:restartAll'),
+  runGroup: (name) => ipcRenderer.invoke('server:runGroup', name),
+  stopGroup: (name) => ipcRenderer.invoke('server:stopGroup', name),
+  restartGroup: (name) => ipcRenderer.invoke('server:restartGroup', name),
   runningIds: () => ipcRenderer.invoke('server:runningIds'),
 
   // --- terminal io ---

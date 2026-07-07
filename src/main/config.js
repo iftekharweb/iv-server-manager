@@ -31,6 +31,7 @@ function sanitizeServer(s) {
   return {
     id: typeof s.id === 'string' && s.id ? s.id : newId(),
     name: String(s.name || 'Unnamed').trim(),
+    group: String(s.group || '').trim(),
     folder: String(s.folder || '').trim(),
     command: String(s.command || '').trim(),
     shell: ['cmd', 'powershell', 'bash'].includes(s.shell) ? s.shell : 'cmd',

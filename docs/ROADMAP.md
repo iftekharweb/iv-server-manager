@@ -5,7 +5,9 @@ Roughly ordered by value vs. effort. Check items off as they ship.
 
 ## High value / low effort
 - [ ] **Auto-start servers on launch** — per-server "start on app open" toggle.
-- [ ] **Server groups / profiles** — e.g. "IVTrip" group; run/stop a group at once.
+- [x] **Server groups / profiles** — optional per-server group; sidebar shows collapsible
+      group headers with per-group Run/Restart/Stop. Ungrouped servers under an "Ungrouped"
+      header; flat list when no groups exist.
 - [ ] **Status bar counts** — "3 running / 4" summary in the top bar.
 - [ ] **Confirm before Stop All / Restart All** — avoid accidental mass restarts.
 - [ ] **Auto-detect port from command** — parse trailing number (e.g. `yarn dev 7003`) as a

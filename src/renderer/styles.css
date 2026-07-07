@@ -125,6 +125,23 @@ html, body {
 .server-list { list-style: none; margin: 0; padding: 6px; overflow-y: auto; flex: 1 1 auto; }
 .empty-hint { padding: 24px 16px; color: var(--text-dim); text-align: center; line-height: 1.6; }
 
+/* group headers */
+.group-head {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 8px; margin: 8px 2px 5px;
+  cursor: pointer; user-select: none;
+  border-bottom: 1px solid var(--border);
+}
+.group-head:first-child { margin-top: 2px; }
+.group-head .caret { color: var(--text-dim); font-size: 10px; width: 10px; }
+.group-head .group-name {
+  font-size: 11px; letter-spacing: .05em; text-transform: uppercase; font-weight: 700;
+  color: var(--text); flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.group-head .group-count { color: var(--text-dim); font-size: 10.5px; }
+.group-head .group-actions { display: flex; gap: 3px; }
+.group-head .group-actions .mini { flex: 0 0 auto; padding: 2px 7px; }
+
 .server-item {
   border: 1px solid transparent;
   border-radius: 8px;

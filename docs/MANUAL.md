@@ -75,7 +75,17 @@ Example (IVTrip backend):
 ### Run / Restart / Stop
 - **Per server** — use the buttons on each sidebar card: `▶ Run`, `⟳` (restart), `■` (stop).
 - **All at once** — top bar: **▶ Run All**, **⟳ Restart All**, **■ Stop All**.
+- **Per group** — see [Groups](#groups) below.
 - Status dot: 🟢 running · ⚪ stopped · 🔴 error.
+
+### Groups
+Give servers an optional **Group** (in Add/Edit — free text, suggests existing groups). When
+any server has a group, the sidebar shows collapsible group headers, each with **▶ / ⟳ / ■**
+buttons that Run / Restart / Stop every server in that group at once, plus a `running/total`
+count. Click a header to collapse/expand it. Servers with no group appear under an
+**Ungrouped** header. If no server has a group, the list stays flat.
+Example: put backend, frontend, admin, and superadmin all in group `IVTrip`, then start the
+whole stack with one click on the group's ▶.
 
 ### View / copy / save logs
 - Click a server to open its **live terminal** in the main panel.

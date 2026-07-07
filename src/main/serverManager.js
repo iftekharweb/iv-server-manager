@@ -196,12 +196,26 @@ class ServerManager {
     for (const s of servers) this.start(s);
   }
 
+  /** Stop a specific set of servers (freeing their ports). */
+  async stopMany(servers) {
+    await Promise.all(servers.map((s) => this.stop(s.id, s)));
+  }
+
+  /** Restart a specific set: stop, wait for their ports to free, then start. */
+  async restartMany(servers) {
+    await this.stopMany(servers);
+    const ports = servers.flatMap((s) => parsePorts(s.port));
+    if (ports.length) await waitPortsFree(ports, 5000);
+    else await new Promise((r) => setTimeout(r, 400));
+    await this.startAll(servers);
+  }
+
   async stopAll() {
     const running = this.runningIds().map((id) => {
       const e = this.procs.get(id);
-      return { id, server: e && e.server };
+      return (e && e.server) || { id };
     });
-    await Promise.all(running.map(({ id, server }) => this.stop(id, server)));
+    await this.stopMany(running);
   }
 
   async restartAll(servers) {

@@ -52,6 +52,13 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   `git status --porcelain`); UI shows an amber dot after the branch when uncommitted changes
   exist. `src/main/git.js` + `src/renderer/app.js` (branches map now holds an object).
 
+## v1.5 changes
+- Added: server groups. Optional `group` field per server (config + Add/Edit modal with
+  datalist of existing groups). Sidebar renders collapsible group headers with per-group
+  Run/Restart/Stop; ungrouped servers under "Ungrouped"; flat list when no groups.
+  serverManager gains `stopMany`/`restartMany` (reused by stopAll/restartAll); IPC
+  `server:runGroup|stopGroup|restartGroup`. `src/renderer/app.js` renderList regrouped.
+
 ## v1.4 changes
 - Added: collapsible scratch terminal docked right (`#scratchDock`). Interactive shell for
   ad-hoc commands, opens in active server's folder + shell (fallback default). Expand via

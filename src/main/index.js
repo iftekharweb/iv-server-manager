@@ -122,6 +122,13 @@ function registerIpc() {
   ipcMain.handle('server:stopAll', () => manager.stopAll());
   ipcMain.handle('server:restartAll', () => manager.restartAll(config.load().servers));
 
+  const serversInGroup = (name) =>
+    config.load().servers.filter((s) => (s.group || '').trim() === String(name || '').trim());
+
+  ipcMain.handle('server:runGroup', (_e, name) => manager.startAll(serversInGroup(name)));
+  ipcMain.handle('server:stopGroup', (_e, name) => manager.stopMany(serversInGroup(name)));
+  ipcMain.handle('server:restartGroup', (_e, name) => manager.restartMany(serversInGroup(name)));
+
   ipcMain.handle('server:runningIds', () => manager.runningIds());
 
   ipcMain.on('server:input', (_e, { id, data }) => manager.write(id, data));
