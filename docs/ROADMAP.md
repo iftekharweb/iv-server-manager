@@ -56,7 +56,9 @@ Roughly ordered by value vs. effort. Check items off as they ship.
       (packaged NSIS installs only), downloads a newer version in the background, and shows
       a top-bar banner with a "Restart & Update" button. Publish via `npm run dist --
       --publish always` with `GH_TOKEN` set. Portable/dev builds skip the check.
-- [ ] **Reduce bundle size** — trim unused Electron locales; consider Tauri if size matters.
+- [x] **Reduce bundle size** — `electronLanguages: ["en-US"]` in the build config ships only
+      one locale `.pak` instead of 55. Windows installer dropped ~7 MB (79.5 → 72.4 MB). Tauri
+      migration remains an open option if size matters more later.
 - [ ] **Fix GPU cache warnings** — set a writable `userData`/cache path off OneDrive.
 - [ ] **Tests** — unit tests for `ports.js`, `shells.js`, `git.js`, `config.js`;
       smoke test for spawn/stream.

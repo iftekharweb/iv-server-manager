@@ -1,7 +1,7 @@
 {
   "name": "iv-server-manager",
   "productName": "IV Server Manager",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Desktop app to run, restart, and view logs for any dev server.",
   "main": "src/main/index.js",
   "author": "ImpleVista",
@@ -29,6 +29,9 @@
   "build": {
     "appId": "com.implevista.ivservermanager",
     "productName": "IV Server Manager",
+    "electronLanguages": [
+      "en-US"
+    ],
     "directories": {
       "output": "dist"
     },

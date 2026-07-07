@@ -52,6 +52,14 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   `git status --porcelain`); UI shows an amber dot after the branch when uncommitted changes
   exist. `src/main/git.js` + `src/renderer/app.js` (branches map now holds an object).
 
+## v1.7.1 changes
+- Reduce bundle size: added `electronLanguages: ["en-US"]` to `build` in package.json, so the
+  packaged app ships one locale `.pak` instead of 55. Windows NSIS installer 79.5 MB → 72.4 MB
+  (~7 MB). Verified by diffing dist output + counting `win-unpacked/locales/*.pak` (55 → 1).
+- First release used to exercise the auto-update flow: baseline v1.7.0 installer built +
+  installed, then v1.7.1 published to GitHub Releases; installed 1.7.0 detected/downloaded/
+  installed it via the banner.
+
 ## v1.8 changes
 - Added: auto-update via `electron-updater` + GitHub Releases. New `src/main/updater.js`
   (`initAutoUpdate` / `quitAndInstall`); wired in `index.js` on app-ready (`update:status`
