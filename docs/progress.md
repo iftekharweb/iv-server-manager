@@ -55,8 +55,9 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
 ## v1.4 changes
 - Added: collapsible scratch terminal docked right (`#scratchDock`). Interactive shell for
   ad-hoc commands, opens in active server's folder + shell (fallback default). Expand via
-  rail, drag left edge to resize (≤50vw), Hide minimizes (pty stays alive). "reopen in
-  <server>" when active server changes. Reuses pty pipeline under reserved id `__scratch__`
+  rail, drag left edge to resize (≤50vw), Hide minimizes (pty stays alive). Auto-follows the
+  active server: switching server reopens the scratch shell in that folder (only while
+  expanded, so a running command isn't killed). Reuses pty pipeline under reserved id `__scratch__`
   (`ServerManager.SCRATCH_ID`); `resolveShell` now supports empty command = interactive shell.
   New IPC `scratch:start`/`scratch:stop`. Verified: interactive cmd shell echoes typed input.
 

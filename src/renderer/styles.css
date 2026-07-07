@@ -262,7 +262,6 @@ html, body {
   max-width: 40vw;
 }
 .scratch-actions { display: flex; gap: 6px; flex: 0 0 auto; }
-#scratchReopen { border-color: var(--accent); color: #a9c2ff; }
 .scratch-term { flex: 1 1 auto; min-height: 0; padding: 6px 4px 4px 8px; }
 .scratch-term .xterm { height: 100%; }
 

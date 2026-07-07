@@ -101,8 +101,9 @@ switch a branch, run a migration) — separate from the per-server log terminals
   global default shell / home dir when no server is selected).
 - It's a full interactive shell — type any command, Ctrl+C, etc. Anything you do that changes
   the repo (e.g. `git switch`) is reflected in that server's branch indicator within seconds.
-- Select a different server while it's open and a **⟳ reopen in &lt;server&gt;** button appears —
-  click it to restart the scratch shell in that server's folder. **✕ Clear** clears the view.
+- Select a different server while it's open and the scratch shell **automatically reopens** in
+  that server's folder — no button needed. (While minimized it stays put, so a running command
+  isn't interrupted; it follows again the next time you expand it.) **✕ Clear** clears the view.
 
 ### Quitting
 - Closing the window stops **all** running servers and kills their full process trees

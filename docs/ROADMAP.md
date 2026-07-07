@@ -31,6 +31,8 @@ Roughly ordered by value vs. effort. Check items off as they ship.
       `wt` batch file or a project's `scripts`.
 
 ## Larger / nice-to-have
+- [x] **Ad-hoc scratch terminal** — collapsible right-docked interactive shell for one-off
+      commands (install, git switch, migrations), opens in the active server's folder/shell.
 - [ ] **Split / tiled terminals** — view multiple server logs at once.
 - [ ] **Tabs instead of single panel** — keep several terminals visible via tabs.
 - [ ] **Theme options** — light theme + font-size control.
