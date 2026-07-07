@@ -137,6 +137,7 @@ html, body {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .server-item .branch { color: #a9c2ff; font-size: 10.5px; margin-top: 3px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.server-item .branch .dirty { color: var(--amber); font-size: 9px; vertical-align: middle; }
 .server-item .actions { display: flex; gap: 4px; margin-top: 8px; }
 .mini {
   flex: 1 1 auto; text-align: center;

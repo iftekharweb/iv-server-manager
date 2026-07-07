@@ -18,7 +18,8 @@ Roughly ordered by value vs. effort. Check items off as they ship.
 ## Medium
 - [x] **Live git branch refresh** — branch polls every 4s + refreshes on server start, so
       switching branches while the app is open updates within seconds.
-- [ ] **Git dirty indicator** — show `*` when the repo has uncommitted changes.
+- [x] **Git dirty indicator** — amber dot after the branch name when the repo has
+      uncommitted changes (`git status --porcelain`).
 - [ ] **Per-server env vars** — key/value list injected into the spawn env.
 - [ ] **Restart on crash** — optional auto-restart with backoff when a server exits non-zero.
 - [ ] **Log persistence to disk** — rolling log file per server, survives app restart.

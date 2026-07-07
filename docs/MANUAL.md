@@ -63,6 +63,8 @@ You have three ways to run it. All live in the `dist/` folder after a build.
 > It's fetched at app launch (for existing servers), when you add/edit a server, and on each
 > Run/Restart, plus polled every few seconds — so switching branches outside the app is
 > reflected within seconds. The lookup is async and never blocks a server from starting.
+> A small amber dot after the branch name (e.g. `⎇ main ●`) means the repo has uncommitted
+> changes; no dot means the working tree is clean.
 
 Example (IVTrip backend):
 - Name `backend`

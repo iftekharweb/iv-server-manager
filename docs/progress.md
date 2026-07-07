@@ -48,6 +48,9 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   blocks spawning.
 - Build gotcha: rebuild once left stale single-file exes because a leftover boot-test
   `electron.exe` locked the output. Always close the app before `npm run dist`.
+- Added: git dirty indicator. `getBranch` now returns `{branch, dirty}` (dirty via
+  `git status --porcelain`); UI shows an amber dot after the branch when uncommitted changes
+  exist. `src/main/git.js` + `src/renderer/app.js` (branches map now holds an object).
 
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
