@@ -52,6 +52,14 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   `git status --porcelain`); UI shows an amber dot after the branch when uncommitted changes
   exist. `src/main/git.js` + `src/renderer/app.js` (branches map now holds an object).
 
+## v1.6 changes (roadmap batch)
+- Confirm dialog before Stop All / Restart All (top-bar mass actions).
+- Auto-detect port from command (`-p/--port` flag or trailing number) → fills Port field.
+- Copy button copies the terminal selection when present, else the whole buffer.
+- Search in logs: Ctrl+F find bar (next/prev, match count) via `@xterm/addon-search`.
+- Clickable links: `@xterm/addon-web-links`; URLs open via `shell.openExternal` (IPC
+  `open:external`). Both addons loaded on server + scratch terminals (`loadCommonAddons`).
+
 ## v1.5 changes
 - Added: server groups. Optional `group` field per server (config + Add/Edit modal with
   datalist of existing groups). Sidebar renders collapsible group headers with per-group

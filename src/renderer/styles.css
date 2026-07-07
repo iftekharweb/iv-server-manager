@@ -202,6 +202,25 @@ html, body {
   color: var(--text-dim); text-align: center; padding: 20px;
 }
 
+/* search-in-logs bar */
+.search-bar {
+  position: absolute; top: 8px; right: 16px; z-index: 10;
+  display: flex; align-items: center; gap: 4px;
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 5px 6px; box-shadow: 0 6px 20px rgba(0,0,0,.4);
+}
+.search-bar input {
+  background: var(--bg-3); border: 1px solid var(--border); color: var(--text);
+  border-radius: 5px; padding: 5px 8px; font-size: 12.5px; width: 200px; outline: none;
+}
+.search-bar input:focus { border-color: var(--accent); }
+.search-count { color: var(--text-dim); font-size: 11px; min-width: 52px; text-align: center; }
+.search-btn {
+  background: var(--bg-3); border: 1px solid var(--border); color: var(--text);
+  border-radius: 5px; padding: 4px 8px; cursor: pointer; font-size: 12px;
+}
+.search-btn:hover { background: #262c38; }
+
 /* xterm fills host */
 .term-host .xterm { height: 100%; }
 

@@ -14,8 +14,10 @@ Roughly ordered by value vs. effort. Check items off as they ship.
       (e.g. `yarn dev 7003`) to auto-fill the Port field.
 - [x] **Copy only selection** — Copy copies the terminal selection when there is one,
       otherwise the whole buffer.
-- [ ] **Search within logs** — xterm search addon (`@xterm/addon-search`), Ctrl+F.
-- [ ] **Clickable links in logs** — xterm web-links addon (open `http://localhost:...`).
+- [x] **Search within logs** — Ctrl+F opens a find bar (next/prev, match count) using
+      `@xterm/addon-search`.
+- [x] **Clickable links in logs** — `@xterm/addon-web-links`; URLs open in the default
+      browser via `shell.openExternal`.
 
 ## Medium
 - [x] **Live git branch refresh** — branch polls every 4s + refreshes on server start, so

@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const { app, BrowserWindow, ipcMain, dialog, clipboard } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, clipboard, shell } = require('electron');
 
 const config = require('./config');
 const { availableShells } = require('./shells');
@@ -140,6 +140,10 @@ function registerIpc() {
   ipcMain.handle('clipboard:write', (_e, text) => {
     clipboard.writeText(text || '');
     return true;
+  });
+
+  ipcMain.handle('open:external', (_e, url) => {
+    if (/^https?:\/\//i.test(String(url || ''))) shell.openExternal(url);
   });
 
   ipcMain.handle('logs:save', async (_e, { name, text }) => {

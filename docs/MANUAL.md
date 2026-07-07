@@ -52,7 +52,8 @@ You have three ways to run it. All live in the `dist/` folder after a build.
    - **Port** *(optional)* — the port this server listens on (e.g. `5000`). When set, the
      app frees this port PC-wide whenever you Stop or Restart the server, so an orphaned
      child process can't keep it bound ("port already in use"). Separate multiple with
-     commas: `5000, 5173`.
+     commas: `5000, 5173`. If left blank, the app tries to auto-detect it from the command
+     (a `-p/--port` flag or a trailing number like `yarn dev 7003`).
 3. **Save**. The server appears in the left sidebar and is saved permanently.
 
 > **Reorder:** drag a server card (grab the ⠿ handle) up or down in the sidebar to change
@@ -74,7 +75,8 @@ Example (IVTrip backend):
 
 ### Run / Restart / Stop
 - **Per server** — use the buttons on each sidebar card: `▶ Run`, `⟳` (restart), `■` (stop).
-- **All at once** — top bar: **▶ Run All**, **⟳ Restart All**, **■ Stop All**.
+- **All at once** — top bar: **▶ Run All**, **⟳ Restart All**, **■ Stop All** (the two mass
+  actions ask for confirmation first).
 - **Per group** — see [Groups](#groups) below.
 - Status dot: 🟢 running · ⚪ stopped · 🔴 error.
 
@@ -92,9 +94,14 @@ whole stack with one click on the group's ▶.
 - The terminal is **interactive** — click into it and type, paste, or press **Ctrl+C** to
   signal the running process.
 - Panel buttons:
-  - **⧉ Copy** — copies the full log buffer to the clipboard (ANSI colors stripped).
+  - **⧉ Copy** — copies the current selection if you've selected text, otherwise the whole
+    log buffer (ANSI colors stripped).
   - **✕ Clear** — clears the view.
   - **⤓ Save** — saves the logs to a `.log` file you choose.
+- **Find (Ctrl+F)** — opens a search bar over the terminal: type to highlight matches, Enter /
+  Shift+Enter for next / previous, a `n/total` counter, Esc to close.
+- **Links** — URLs in the output (e.g. `http://localhost:5000`) are clickable and open in your
+  default browser.
 
 ### Edit / delete
 - **✎** edits a server (same form). **🗑** deletes it (asks for confirmation; stops it first if running).

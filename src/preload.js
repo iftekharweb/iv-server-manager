@@ -36,6 +36,7 @@ contextBridge.exposeInMainWorld('api', {
   // --- logs / clipboard ---
   copyText: (text) => ipcRenderer.invoke('clipboard:write', text),
   saveLogs: (name, text) => ipcRenderer.invoke('logs:save', { name, text }),
+  openExternal: (url) => ipcRenderer.invoke('open:external', url),
 
   // --- events (main -> renderer) ---
   onData: (cb) => {

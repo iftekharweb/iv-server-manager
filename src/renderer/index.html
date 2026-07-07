@@ -57,6 +57,13 @@
           </div>
           <div id="terminals" class="terminals">
             <div id="noTerm" class="no-term">Select a server, then press Run to see its live output here.</div>
+            <div id="searchBar" class="search-bar hidden">
+              <input id="searchInput" type="text" placeholder="Find in logs…" autocomplete="off" />
+              <span id="searchCount" class="search-count"></span>
+              <button id="searchPrev" class="search-btn" title="Previous (Shift+Enter)">▲</button>
+              <button id="searchNext" class="search-btn" title="Next (Enter)">▼</button>
+              <button id="searchClose" class="search-btn" title="Close (Esc)">✕</button>
+            </div>
           </div>
         </main>
 
@@ -136,6 +143,8 @@
 
     <script src="../../node_modules/@xterm/xterm/lib/xterm.js"></script>
     <script src="../../node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
+    <script src="../../node_modules/@xterm/addon-search/lib/addon-search.js"></script>
+    <script src="../../node_modules/@xterm/addon-web-links/lib/addon-web-links.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
