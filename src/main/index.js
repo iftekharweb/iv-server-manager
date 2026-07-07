@@ -95,6 +95,8 @@ function registerIpc() {
     return { config: cfg };
   });
 
+  ipcMain.handle('app:version', () => app.getVersion());
+
   ipcMain.handle('git:branch', (_e, folder) => getBranch(folder));
 
   ipcMain.handle('dialog:pickFolder', async () => {

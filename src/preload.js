@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('api', {
   setDefaultShell: (shell) => ipcRenderer.invoke('config:setDefaultShell', shell),
   reorder: (orderedIds) => ipcRenderer.invoke('config:reorder', orderedIds),
   pickFolder: () => ipcRenderer.invoke('dialog:pickFolder'),
+  getVersion: () => ipcRenderer.invoke('app:version'),
   getBranch: (folder) => ipcRenderer.invoke('git:branch', folder),
 
   // --- server lifecycle ---

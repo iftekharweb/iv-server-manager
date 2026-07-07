@@ -56,6 +56,9 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
 - Reduce bundle size: added `electronLanguages: ["en-US"]` to `build` in package.json, so the
   packaged app ships one locale `.pak` instead of 55. Windows NSIS installer 79.5 MB → 72.4 MB
   (~7 MB). Verified by diffing dist output + counting `win-unpacked/locales/*.pak` (55 → 1).
+- Added: app version shown in the top bar next to the brand (`#appVersion`, dim `vX.Y.Z`).
+  `app.getVersion()` via IPC `app:version` → preload `getVersion` → set in `init`. Makes an
+  auto-update visually confirmable (version changes after Restart & Update).
 - First release used to exercise the auto-update flow: baseline v1.7.0 installer built +
   installed, then v1.7.1 published to GitHub Releases; installed 1.7.0 detected/downloaded/
   installed it via the banner.

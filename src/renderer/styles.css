@@ -53,6 +53,7 @@ html, body {
 }
 .brand { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 .logo { color: var(--accent); font-size: 16px; }
+.app-version { color: var(--text-dim); font-size: 11px; font-weight: 400; margin-left: 2px; }
 .top-actions { display: flex; align-items: center; gap: 8px; }
 
 /* Auto-update banner (center of top bar) */
