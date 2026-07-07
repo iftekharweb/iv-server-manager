@@ -9,7 +9,7 @@ Roughly ordered by value vs. effort. Check items off as they ship.
       group headers with per-group Run/Restart/Stop. Ungrouped servers under an "Ungrouped"
       header; flat list when no groups exist.
 - [ ] **Status bar counts** — "3 running / 4" summary in the top bar.
-- [ ] **Confirm before Stop All / Restart All** — avoid accidental mass restarts.
+- [x] **Confirm before Stop All / Restart All** — confirm dialog guards the mass actions.
 - [ ] **Auto-detect port from command** — parse trailing number (e.g. `yarn dev 7003`) as a
       default for the Port field.
 - [ ] **Copy only selection** — Copy button currently copies the whole buffer; add
