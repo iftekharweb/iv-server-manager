@@ -12,8 +12,8 @@ Roughly ordered by value vs. effort. Check items off as they ship.
 - [x] **Confirm before Stop All / Restart All** — confirm dialog guards the mass actions.
 - [x] **Auto-detect port from command** — parses `-p/--port` flag or a trailing number
       (e.g. `yarn dev 7003`) to auto-fill the Port field.
-- [ ] **Copy only selection** — Copy button currently copies the whole buffer; add
-      "copy selection" when text is selected in the terminal.
+- [x] **Copy only selection** — Copy copies the terminal selection when there is one,
+      otherwise the whole buffer.
 - [ ] **Search within logs** — xterm search addon (`@xterm/addon-search`), Ctrl+F.
 - [ ] **Clickable links in logs** — xterm web-links addon (open `http://localhost:...`).
 
