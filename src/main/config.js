@@ -6,6 +6,12 @@ const { app } = require('electron');
 
 let configPath;
 
+// Superset of shell ids across platforms — kept as-is so a config authored on
+// one OS survives a round-trip through another. resolveShell() maps an unusable
+// id to a local shell at spawn time.
+const KNOWN_SHELLS = ['cmd', 'powershell', 'bash', 'zsh', 'sh'];
+const DEFAULT_SHELL = process.platform === 'win32' ? 'cmd' : 'bash';
+
 function getConfigPath() {
   if (!configPath) {
     configPath = path.join(app.getPath('userData'), 'servers.json');
@@ -14,7 +20,7 @@ function getConfigPath() {
 }
 
 function defaultConfig() {
-  return { defaultShell: 'cmd', servers: [] };
+  return { defaultShell: DEFAULT_SHELL, servers: [] };
 }
 
 /**
@@ -34,7 +40,7 @@ function sanitizeServer(s) {
     group: String(s.group || '').trim(),
     folder: String(s.folder || '').trim(),
     command: String(s.command || '').trim(),
-    shell: ['cmd', 'powershell', 'bash'].includes(s.shell) ? s.shell : 'cmd',
+    shell: KNOWN_SHELLS.includes(s.shell) ? s.shell : DEFAULT_SHELL,
     // Optional port(s) freed on stop/restart, e.g. "5000" or "5000, 5173".
     port: String(s.port || '').trim(),
   };
@@ -51,9 +57,7 @@ function load() {
     const raw = fs.readFileSync(p, 'utf8');
     const parsed = JSON.parse(raw);
     return {
-      defaultShell: ['cmd', 'powershell', 'bash'].includes(parsed.defaultShell)
-        ? parsed.defaultShell
-        : 'cmd',
+      defaultShell: KNOWN_SHELLS.includes(parsed.defaultShell) ? parsed.defaultShell : DEFAULT_SHELL,
       servers: Array.isArray(parsed.servers) ? parsed.servers.map(sanitizeServer) : [],
     };
   } catch (err) {
@@ -74,9 +78,7 @@ function load() {
 function save(config) {
   const p = getConfigPath();
   const clean = {
-    defaultShell: ['cmd', 'powershell', 'bash'].includes(config.defaultShell)
-      ? config.defaultShell
-      : 'cmd',
+    defaultShell: KNOWN_SHELLS.includes(config.defaultShell) ? config.defaultShell : DEFAULT_SHELL,
     servers: Array.isArray(config.servers) ? config.servers.map(sanitizeServer) : [],
   };
   fs.mkdirSync(path.dirname(p), { recursive: true });

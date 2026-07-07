@@ -126,10 +126,25 @@ class ServerManager {
     }
   }
 
-  /** Kill a pid and its whole child tree (best-effort). */
+  /** Kill a pid and its whole child tree (best-effort, cross-platform). */
   killPidTree(pid) {
     return new Promise((resolve) => {
-      exec(`taskkill /PID ${pid} /T /F`, { windowsHide: true }, () => resolve());
+      if (process.platform === 'win32') {
+        exec(`taskkill /PID ${pid} /T /F`, { windowsHide: true }, () => resolve());
+        return;
+      }
+      // POSIX: node-pty spawns the shell in its own session, so the pty pid is a
+      // process-group leader — negative pid signals the whole group.
+      try {
+        process.kill(-pid, 'SIGKILL');
+      } catch (_) {
+        try {
+          process.kill(pid, 'SIGKILL');
+        } catch (_) {
+          /* already dead */
+        }
+      }
+      resolve();
     });
   }
 

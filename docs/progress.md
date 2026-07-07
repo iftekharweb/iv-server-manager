@@ -52,6 +52,17 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   `git status --porcelain`); UI shows an amber dot after the branch when uncommitted changes
   exist. `src/main/git.js` + `src/renderer/app.js` (branches map now holds an object).
 
+## v1.7 changes
+- Cross-platform support. `shells.js`, `ports.js`, `serverManager.killPidTree`, and
+  `config.js` are now platform-aware:
+  - Windows: cmd/powershell/Git-bash, `netstat`+`taskkill /T`, `.ico`.
+  - macOS/Linux: bash/zsh/sh (detected on PATH), `lsof -t`+`kill -9`, process-group
+    `kill(-pid)`; default shell `bash`.
+  - Config shell validation broadened to a cross-OS superset; renderer builds the shell
+    dropdown dynamically from the platform's available shells (`buildShellOptions`).
+  - Build targets added: mac (dmg/zip), linux (AppImage/deb) + `dist:mac`/`dist:linux`
+    scripts. Must be built on the respective OS. Windows behavior unchanged.
+
 ## v1.6 changes (roadmap batch)
 - Confirm dialog before Stop All / Restart All (top-bar mass actions).
 - Auto-detect port from command (`-p/--port` flag or trailing number) → fills Port field.

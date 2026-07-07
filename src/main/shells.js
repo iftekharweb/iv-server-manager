@@ -3,6 +3,8 @@
 const fs = require('fs');
 const { execSync } = require('child_process');
 
+const isWin = process.platform === 'win32';
+
 let cachedBashPath; // undefined = not looked up, null = not found, string = path
 
 /**
@@ -50,49 +52,75 @@ function findGitBash() {
   return null;
 }
 
-/**
- * Which shells are usable on this machine (bash only if Git Bash exists).
- * @returns {{cmd: boolean, powershell: boolean, bash: boolean}}
- */
-function availableShells() {
-  return {
-    cmd: true,
-    powershell: true,
-    bash: findGitBash() !== null,
-  };
+/** Is a binary resolvable on PATH (POSIX)? */
+const onPathCache = {};
+function onPath(bin) {
+  if (bin in onPathCache) return onPathCache[bin];
+  try {
+    execSync(`command -v ${bin}`, { stdio: 'ignore' });
+    onPathCache[bin] = true;
+  } catch (_) {
+    onPathCache[bin] = false;
+  }
+  return onPathCache[bin];
 }
 
 /**
- * Resolve a shell name + command into a spawnable file/args pair for node-pty.
- * The command is run to completion by the shell within the server's folder.
- * @param {"cmd"|"powershell"|"bash"} shell
+ * Which shells are usable on this machine. Keys are shell ids; values booleans.
+ * - Windows: cmd, powershell, bash (bash only if Git Bash is installed).
+ * - macOS/Linux: bash, zsh, sh (only those found on PATH; sh is assumed present).
+ * @returns {Record<string, boolean>}
+ */
+function availableShells() {
+  if (isWin) {
+    return { cmd: true, powershell: true, bash: findGitBash() !== null };
+  }
+  return { bash: onPath('bash'), zsh: onPath('zsh'), sh: true };
+}
+
+/**
+ * Resolve a shell id + command into a spawnable file/args pair for node-pty.
+ * When command is empty the shell opens interactively (used by the scratch
+ * terminal). Handles both Windows and POSIX; a shell id from another OS falls
+ * back to a sensible local default.
+ * @param {string} shell
  * @param {string} command
  * @returns {{file: string, args: string[]}}
  */
 function resolveShell(shell, command) {
   const hasCmd = String(command || '').trim().length > 0;
-  switch (shell) {
-    case 'powershell':
-      return {
-        file: 'powershell.exe',
-        args: hasCmd ? ['-NoLogo', '-NoExit', '-Command', command] : ['-NoLogo', '-NoExit'],
-      };
-    case 'bash': {
-      const bash = findGitBash();
-      if (!bash) throw new Error('Git Bash (bash.exe) not found on this machine.');
-      // -i keeps it interactive; run command then drop to shell so it stays open.
-      return {
-        file: bash,
-        args: hasCmd ? ['-l', '-i', '-c', `${command}; exec bash -i`] : ['-l', '-i'],
-      };
+
+  if (isWin) {
+    switch (shell) {
+      case 'powershell':
+        return {
+          file: 'powershell.exe',
+          args: hasCmd ? ['-NoLogo', '-NoExit', '-Command', command] : ['-NoLogo', '-NoExit'],
+        };
+      case 'bash': {
+        const bash = findGitBash();
+        if (!bash) throw new Error('Git Bash (bash.exe) not found on this machine.');
+        return {
+          file: bash,
+          args: hasCmd ? ['-l', '-i', '-c', `${command}; exec bash -i`] : ['-l', '-i'],
+        };
+      }
+      case 'cmd':
+      default:
+        return { file: 'cmd.exe', args: hasCmd ? ['/d', '/k', command] : ['/k'] };
     }
-    case 'cmd':
-    default:
-      return {
-        file: 'cmd.exe',
-        args: hasCmd ? ['/d', '/k', command] : ['/k'],
-      };
   }
+
+  // POSIX (macOS / Linux)
+  const avail = availableShells();
+  // Map Windows shell ids (from a config authored elsewhere) to a local shell.
+  let sh = shell;
+  if (!(sh in avail) || !avail[sh]) sh = avail.bash ? 'bash' : avail.zsh ? 'zsh' : 'sh';
+  // Run the command, then drop into an interactive shell so the window stays open.
+  return {
+    file: sh,
+    args: hasCmd ? ['-i', '-c', `${command}; exec ${sh} -i`] : ['-i'],
+  };
 }
 
 module.exports = { findGitBash, availableShells, resolveShell };

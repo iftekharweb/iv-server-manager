@@ -159,11 +159,17 @@ Shape:
 
 Each server picks its own shell.
 
+On **Windows**:
+
 | Shell | Runs as |
 |-------|---------|
 | `cmd` | `cmd.exe /d /k <command>` |
 | `powershell` | `powershell.exe -NoLogo -NoExit -Command <command>` |
 | `bash` | Git Bash `bash.exe -l -i -c "<command>; exec bash -i"` |
+
+On **macOS / Linux** the shells are `bash`, `zsh`, and `sh` (whichever are found on your
+PATH), run as `<shell> -i -c "<command>; exec <shell> -i"`. The default shell is `bash`.
+The shell dropdown adapts to the platform automatically.
 
 **Bash requires Git for Windows.** The app auto-detects `bash.exe` at the usual install
 locations and via `where git`. If Git isn't installed, the `bash` option shows

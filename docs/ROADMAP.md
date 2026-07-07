@@ -41,8 +41,10 @@ Roughly ordered by value vs. effort. Check items off as they ship.
 - [ ] **Tabs instead of single panel** — keep several terminals visible via tabs.
 - [ ] **Theme options** — light theme + font-size control.
 - [ ] **Notifications** — OS toast when a server crashes or finishes building.
-- [ ] **Cross-platform** — macOS/Linux support (shell resolution + `taskkill` are
-      Windows-specific today; would need `pkill`/`kill` equivalents).
+- [x] **Cross-platform** — shell resolution, port-freeing, and process-kill are now
+      platform-aware (Windows: cmd/powershell/Git-bash, netstat, taskkill; macOS/Linux:
+      bash/zsh/sh, lsof, process-group kill). Build targets added for mac (dmg/zip) and
+      linux (AppImage/deb); must be built on those OSes.
 - [ ] **Global hotkeys** — e.g. focus app / restart active server from anywhere.
 - [ ] **Config export/import** — share a `servers.json` across machines/teammates.
 
@@ -59,6 +61,7 @@ Roughly ordered by value vs. effort. Check items off as they ship.
       can clean up (flush DB connections, remove pid files).
 
 ## Known limitations (today)
-- Windows-only (shell + kill logic).
+- Primary target is Windows; macOS/Linux are supported in code but less tested, and their
+  installers must be built on those OSes.
 - Not code-signed → SmartScreen warning on first run.
 - No hot reload in dev; relaunch `npm start` after code changes.
