@@ -60,7 +60,8 @@ You have three ways to run it. All live in the `dist/` folder after a build.
 >
 > **Git branch:** if a server's folder is a git repo, its current branch shows under the
 > command (e.g. `⎇ main`) and in the panel header. Folders without git show nothing.
-> The branch refreshes on launch and when you edit the server.
+> The branch auto-updates — it's polled every few seconds and refreshed whenever a server
+> starts — so switching branches outside the app is reflected within seconds.
 
 Example (IVTrip backend):
 - Name `backend`

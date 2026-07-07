@@ -40,6 +40,12 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   --abbrev-ref HEAD`; null if not a repo / git missing. Shown under command in sidebar and
   in panel header. Verified: repo→branch, non-repo→null, detached→"(detached)".
 
+## v1.3 changes
+- Fixed: git branch label went stale when switching branches outside the app. Branch now
+  polls every 4s (`setInterval(loadBranches, 4000)`) and refreshes on any server 'running'
+  state change; `loadBranches` re-renders only when a branch value actually changed.
+  (`src/renderer/app.js`)
+
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
   original node-pty failed: VS Build Tools C++ workload absent).

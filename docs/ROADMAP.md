@@ -16,8 +16,8 @@ Roughly ordered by value vs. effort. Check items off as they ship.
 - [ ] **Clickable links in logs** — xterm web-links addon (open `http://localhost:...`).
 
 ## Medium
-- [ ] **Live git branch refresh** — poll / watch `.git/HEAD` so the branch updates when you
-      switch branches while the app is open (currently refreshes on launch + edit only).
+- [x] **Live git branch refresh** — branch polls every 4s + refreshes on server start, so
+      switching branches while the app is open updates within seconds.
 - [ ] **Git dirty indicator** — show `*` when the repo has uncommitted changes.
 - [ ] **Per-server env vars** — key/value list injected into the spawn env.
 - [ ] **Restart on crash** — optional auto-restart with backoff when a server exits non-zero.
@@ -53,4 +53,3 @@ Roughly ordered by value vs. effort. Check items off as they ship.
 - Windows-only (shell + kill logic).
 - Not code-signed → SmartScreen warning on first run.
 - No hot reload in dev; relaunch `npm start` after code changes.
-- Branch shown is a snapshot; doesn't live-update on branch switch.

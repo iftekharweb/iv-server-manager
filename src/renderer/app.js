@@ -64,24 +64,37 @@ async function init() {
 
   renderList();
   loadBranches();
+  // Pick up branch switches made outside the app (which often auto-restart the
+  // server via the dev watcher). Cheap `git rev-parse` per server; re-renders
+  // only when a branch actually changed.
+  setInterval(loadBranches, 4000);
 }
 
 /**
- * Fetch the git branch for every server's folder and refresh the list.
+ * Fetch the git branch for every server's folder. Re-renders only if something
+ * actually changed, so it's safe to call on a timer without disrupting the UI.
  * Servers without a git repo simply show no branch.
  */
 async function loadBranches() {
+  let changed = false;
   await Promise.all(
     state.config.servers.map(async (s) => {
+      let branch = null;
       try {
-        branches.set(s.id, await window.api.getBranch(s.folder));
+        branch = await window.api.getBranch(s.folder);
       } catch (_) {
-        branches.set(s.id, null);
+        branch = null;
+      }
+      if (branches.get(s.id) !== branch) {
+        branches.set(s.id, branch);
+        changed = true;
       }
     })
   );
-  renderList();
-  updatePanelHeader();
+  if (changed) {
+    renderList();
+    updatePanelHeader();
+  }
 }
 
 // ============================================================
@@ -312,6 +325,8 @@ function handleState(id, st) {
   statuses.set(id, st);
   renderList();
   if (id === state.activeId) updatePanelHeader();
+  // A (re)start often follows a branch switch — refresh branches promptly.
+  if (st === 'running') loadBranches();
 }
 
 function updatePanelHeader() {
