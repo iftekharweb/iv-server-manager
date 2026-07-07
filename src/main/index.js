@@ -6,6 +6,7 @@ const { app, BrowserWindow, ipcMain, dialog, clipboard } = require('electron');
 
 const config = require('./config');
 const { availableShells } = require('./shells');
+const { getBranch } = require('./git');
 const ServerManager = require('./serverManager');
 
 let mainWindow = null;
@@ -92,6 +93,8 @@ function registerIpc() {
     config.save(cfg);
     return { config: cfg };
   });
+
+  ipcMain.handle('git:branch', (_e, folder) => getBranch(folder));
 
   ipcMain.handle('dialog:pickFolder', async () => {
     const res = await dialog.showOpenDialog(mainWindow, {

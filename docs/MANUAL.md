@@ -57,6 +57,10 @@ You have three ways to run it. All live in the `dist/` folder after a build.
 
 > **Reorder:** drag a server card (grab the ⠿ handle) up or down in the sidebar to change
 > the order. The new order is saved automatically.
+>
+> **Git branch:** if a server's folder is a git repo, its current branch shows under the
+> command (e.g. `⎇ main`) and in the panel header. Folders without git show nothing.
+> The branch refreshes on launch and when you edit the server.
 
 Example (IVTrip backend):
 - Name `backend`
@@ -213,6 +217,8 @@ custom-terminal/
 │  │  ├─ index.js          # window bootstrap + IPC handlers + quit cleanup
 │  │  ├─ config.js         # load/save servers.json
 │  │  ├─ shells.js         # shell resolution + Git Bash detection
+│  │  ├─ ports.js          # find/free/wait on TCP ports (netstat + taskkill)
+│  │  ├─ git.js            # current branch of a folder
 │  │  └─ serverManager.js  # pty spawn/restart/stop, taskkill trees
 │  ├─ preload.js           # secure bridge → window.api
 │  └─ renderer/            # the UI (runs in the window)

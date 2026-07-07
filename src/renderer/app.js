@@ -28,6 +28,8 @@ const state = {
 const terms = new Map();
 /** id -> 'running' | 'stopped' | 'error' */
 const statuses = new Map();
+/** id -> git branch string, or null if not a repo */
+const branches = new Map();
 
 // ---------- element refs ----------
 const el = (id) => document.getElementById(id);
@@ -61,6 +63,25 @@ async function init() {
   running.forEach((id) => statuses.set(id, 'running'));
 
   renderList();
+  loadBranches();
+}
+
+/**
+ * Fetch the git branch for every server's folder and refresh the list.
+ * Servers without a git repo simply show no branch.
+ */
+async function loadBranches() {
+  await Promise.all(
+    state.config.servers.map(async (s) => {
+      try {
+        branches.set(s.id, await window.api.getBranch(s.folder));
+      } catch (_) {
+        branches.set(s.id, null);
+      }
+    })
+  );
+  renderList();
+  updatePanelHeader();
 }
 
 // ============================================================
@@ -97,6 +118,7 @@ function renderList() {
         <span class="shell-tag">${esc(s.shell)}</span>
       </div>
       <div class="cmd" title="${esc(s.folder)} — ${esc(s.command)}">${esc(s.command)}</div>
+      ${branches.get(s.id) ? `<div class="branch" title="git branch">⎇ ${esc(branches.get(s.id))}</div>` : ''}
       <div class="actions">
         <button class="mini" data-act="run">${running ? '▶ Running' : '▶ Run'}</button>
         <button class="mini" data-act="restart">⟳</button>
@@ -199,6 +221,7 @@ async function deleteServer(id) {
     terms.delete(id);
   }
   statuses.delete(id);
+  branches.delete(id);
   if (state.activeId === id) {
     state.activeId = null;
     updatePanelHeader();
@@ -306,7 +329,9 @@ function updatePanelHeader() {
   dot.className = 'dot ' + dotClass(server.id);
   nameEl.textContent = server.name;
   const st = statusOf(server.id);
-  metaEl.textContent = `· ${st} · ${server.shell} · ${server.command}`;
+  const branch = branches.get(server.id);
+  metaEl.textContent =
+    `· ${st} · ${server.shell}` + (branch ? ` · ⎇ ${branch}` : '') + ` · ${server.command}`;
 }
 
 // ============================================================
@@ -403,6 +428,12 @@ async function onSubmitServer(e) {
   closeModal();
   renderList();
   selectServer(saved.id);
+  // Folder may have changed — refresh this server's branch.
+  window.api.getBranch(saved.folder).then((b) => {
+    branches.set(saved.id, b);
+    renderList();
+    updatePanelHeader();
+  });
 }
 
 // ============================================================

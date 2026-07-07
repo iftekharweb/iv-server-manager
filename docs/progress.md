@@ -31,6 +31,15 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   Fixes orphaned nodemon `node` holding port 5000. Verified: freePorts killed a detached
   listener on :5599 and confirmed free.
 
+## v1.2 changes
+- Fixed: after Restart All, some servers showed no green dot though running. Cause: the OLD
+  pty's late `onExit` deleted the newly-started entry + emitted `stopped`. Fix: `onExit` now
+  no-ops if the map entry for that id is no longer the same pty (identity guard in
+  `serverManager.start`).
+- Added: git branch per server. `src/main/git.js` runs `git -C <folder> rev-parse
+  --abbrev-ref HEAD`; null if not a repo / git missing. Shown under command in sidebar and
+  in panel header. Verified: repo→branch, non-repo→null, detached→"(detached)".
+
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
   original node-pty failed: VS Build Tools C++ workload absent).

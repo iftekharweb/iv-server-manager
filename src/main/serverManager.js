@@ -66,7 +66,8 @@ class ServerManager {
       return;
     }
 
-    this.procs.set(server.id, { proc, pid: proc.pid, server });
+    const entry = { proc, pid: proc.pid, server };
+    this.procs.set(server.id, entry);
     this.onState(server.id, 'running', { pid: proc.pid });
     this.onData(
       server.id,
@@ -75,6 +76,10 @@ class ServerManager {
 
     proc.onData((data) => this.onData(server.id, data));
     proc.onExit(({ exitCode }) => {
+      // A restart replaces the entry for this id with a new pty. If that has
+      // already happened, this is the OLD pty exiting late — ignore it so we
+      // don't wipe the running state of the new process.
+      if (this.procs.get(server.id) !== entry) return;
       this.procs.delete(server.id);
       this.onData(server.id, `\r\n\x1b[90m[manager] process exited (code ${exitCode})\x1b[0m\r\n`);
       this.onState(server.id, 'stopped', { exitCode });
