@@ -43,6 +43,8 @@ Roughly ordered by value vs. effort. Check items off as they ship.
 - [ ] **Config export/import** — share a `servers.json` across machines/teammates.
 
 ## Technical / hardening
+- [x] **Dark scrollbars** — replaced default white OS scrollbars with subtle dark thumbs
+      (webkit + firefox), including the xterm viewport.
 - [ ] **Code-sign the exe** — removes the SmartScreen "unknown publisher" warning.
 - [ ] **Auto-update** — `electron-updater` + GitHub Releases feed.
 - [ ] **Reduce bundle size** — trim unused Electron locales; consider Tauri if size matters.
