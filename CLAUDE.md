@@ -29,7 +29,12 @@ Then open only the specific `src/` file a task touches.
 - Config persists at `%APPDATA%\iv-server-manager\servers.json` (outside the app; survives updates).
 - Branch `main`; remote `origin` = https://github.com/iftekharweb/iv-server-manager.git
 - GPU disk-cache errors on launch are harmless (OneDrive path).
+- Close/kill any running app instance before `npm run dist` — a live `IV Server Manager.exe`
+  locks the output exe and the single-file packaging fails (folder build updates, portable/
+  installer stay stale). Kill `electron.exe` + `IV Server Manager.exe`, then rebuild.
 - `rtk` wrapper is NOT on PATH in the Bash tool — call `git` directly.
+- Git branch per server: fetched at launch/add/edit/run + polled every 4s; async, never
+  blocks spawning. Logic in `src/renderer/app.js` (`loadBranches`) + `src/main/git.js`.
 
 ## Source layout
 ```

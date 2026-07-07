@@ -60,8 +60,9 @@ You have three ways to run it. All live in the `dist/` folder after a build.
 >
 > **Git branch:** if a server's folder is a git repo, its current branch shows under the
 > command (e.g. `⎇ main`) and in the panel header. Folders without git show nothing.
-> The branch auto-updates — it's polled every few seconds and refreshed whenever a server
-> starts — so switching branches outside the app is reflected within seconds.
+> It's fetched at app launch (for existing servers), when you add/edit a server, and on each
+> Run/Restart, plus polled every few seconds — so switching branches outside the app is
+> reflected within seconds. The lookup is async and never blocks a server from starting.
 
 Example (IVTrip backend):
 - Name `backend`
@@ -170,6 +171,11 @@ Other build scripts:
 ```bash
 npm run dist:portable   # only the portable single-file exe (faster)
 ```
+
+> **Close the app before rebuilding.** If an instance of the app (or a leftover
+> `IV Server Manager.exe` / `electron.exe`) is still running, it locks the output `.exe` and
+> the single-file packaging step fails partway (folder build updates, but the portable/
+> installer stay stale). Quit the app, then `npm run dist`.
 
 ### One-time requirement: Windows Developer Mode
 `electron-builder` downloads a helper (`winCodeSign`) that extracts files containing

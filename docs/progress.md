@@ -44,7 +44,10 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
 - Fixed: git branch label went stale when switching branches outside the app. Branch now
   polls every 4s (`setInterval(loadBranches, 4000)`) and refreshes on any server 'running'
   state change; `loadBranches` re-renders only when a branch value actually changed.
-  (`src/renderer/app.js`)
+  (`src/renderer/app.js`). Branch is fetched at launch/add/edit/run + poll; async, never
+  blocks spawning.
+- Build gotcha: rebuild once left stale single-file exes because a leftover boot-test
+  `electron.exe` locked the output. Always close the app before `npm run dist`.
 
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
