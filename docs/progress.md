@@ -52,6 +52,14 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   `git status --porcelain`); UI shows an amber dot after the branch when uncommitted changes
   exist. `src/main/git.js` + `src/renderer/app.js` (branches map now holds an object).
 
+## v1.7.2 changes
+- Fixed GPU/disk cache warnings on launch. On Windows, `src/main/index.js` relocates
+  `sessionData` to `%LOCALAPPDATA%\iv-server-manager\cache` (+ `disk-cache-dir` switch) before
+  app ready, so Chromium's GPUCache/Cache/Code Cache no longer live under the OneDrive-synced
+  tree where cache writes intermittently failed. `servers.json` stays in userData (`%APPDATA%`)
+  — only caches moved, no migration. Verified: dev boot creates GPUCache/Cache/DawnWebGPUCache
+  etc. under LOCALAPPDATA, app boots clean.
+
 ## v1.7.1 changes
 - Reduce bundle size: added `electronLanguages: ["en-US"]` to `build` in package.json, so the
   packaged app ships one locale `.pak` instead of 55. Windows NSIS installer 79.5 MB → 72.4 MB

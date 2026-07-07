@@ -10,6 +10,23 @@ const { getBranch } = require('./git');
 const ServerManager = require('./serverManager');
 const { initAutoUpdate, quitAndInstall } = require('./updater');
 
+// Keep Chromium's caches (GPUCache, disk cache, code cache) on a fast, always-writable
+// local path. When the app runs from a synced folder (e.g. OneDrive), Chromium's cache
+// writes intermittently fail with noisy "GPU disk cache" errors on launch. Relocating
+// sessionData to %LOCALAPPDATA% (never synced) silences them. Must run before app ready.
+// servers.json stays in userData (%APPDATA%) — only the caches move.
+if (process.platform === 'win32') {
+  try {
+    const cacheBase = process.env.LOCALAPPDATA || app.getPath('temp');
+    const cacheDir = path.join(cacheBase, 'iv-server-manager', 'cache');
+    fs.mkdirSync(cacheDir, { recursive: true });
+    app.setPath('sessionData', cacheDir);
+    app.commandLine.appendSwitch('disk-cache-dir', path.join(cacheDir, 'http'));
+  } catch (_) {
+    /* fall back to Electron defaults */
+  }
+}
+
 let mainWindow = null;
 let manager = null;
 

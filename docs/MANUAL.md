@@ -153,6 +153,16 @@ Shape:
   backs it up as `servers.json.corrupt-<timestamp>` and starts fresh — it won't fail to open.
 - To reset the app completely, delete this file.
 
+Chromium's caches (GPU/disk/code cache) live separately on a non-synced local path:
+
+```
+%LOCALAPPDATA%\iv-server-manager\cache
+```
+
+On Windows these are deliberately kept **off** `%APPDATA%`/OneDrive: a synced folder makes
+Chromium's cache writes intermittently fail with noisy "GPU disk cache" errors on launch.
+The folder is disposable — delete it anytime; it's rebuilt on next start.
+
 ---
 
 ## 5. Shells (cmd / powershell / bash)

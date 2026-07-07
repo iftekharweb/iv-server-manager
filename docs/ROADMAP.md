@@ -59,7 +59,9 @@ Roughly ordered by value vs. effort. Check items off as they ship.
 - [x] **Reduce bundle size** — `electronLanguages: ["en-US"]` in the build config ships only
       one locale `.pak` instead of 55. Windows installer dropped ~7 MB (79.5 → 72.4 MB). Tauri
       migration remains an open option if size matters more later.
-- [ ] **Fix GPU cache warnings** — set a writable `userData`/cache path off OneDrive.
+- [x] **Fix GPU cache warnings** — on Windows, `sessionData` (Chromium's GPU/disk/code caches)
+      is relocated to `%LOCALAPPDATA%\iv-server-manager\cache`, off the OneDrive-synced tree,
+      before app ready (`src/main/index.js`). `servers.json` stays in `%APPDATA%` (userData).
 - [ ] **Tests** — unit tests for `ports.js`, `shells.js`, `git.js`, `config.js`;
       smoke test for spawn/stream.
 - [ ] **Graceful stop option** — try SIGINT/Ctrl+C before force `taskkill /F`, so servers
