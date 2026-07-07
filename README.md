@@ -25,3 +25,5 @@ npm run dist        # portable + installer + folder build → dist/
 
 See **[docs/MANUAL.md](docs/MANUAL.md)** — usage, config, shells, building/updating,
 architecture, and troubleshooting.
+
+Planned work: **[docs/ROADMAP.md](docs/ROADMAP.md)**.
