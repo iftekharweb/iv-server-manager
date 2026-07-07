@@ -39,7 +39,8 @@
       {
         "provider": "github",
         "owner": "iftekharweb",
-        "repo": "iv-server-manager"
+        "repo": "iv-server-manager",
+        "releaseType": "release"
       }
     ],
     "files": [
