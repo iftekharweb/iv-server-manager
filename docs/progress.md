@@ -52,6 +52,23 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   `git status --porcelain`); UI shows an amber dot after the branch when uncommitted changes
   exist. `src/main/git.js` + `src/renderer/app.js` (branches map now holds an object).
 
+## v1.8.0 changes — Theme options + font size
+- Added a **Settings modal** (gear button right of Add Server, `#settingsOverlay`) with two
+  tabs: **Appearance** and **About** (`wireSettings` in `src/renderer/app.js`).
+- Appearance: **Dark/Light theme** segmented toggle + **terminal font-size** stepper (10–20px).
+  Both apply live and persist in `servers.json` (`theme`, `fontSize` — added to `config.js`
+  defaults/validation; new IPC `config:setSettings`, preload `setSettings`).
+- Light theme: `styles.css` gained a `:root[data-theme="light"]` block; hardcoded hexes were
+  promoted to CSS vars (`--bg-hover`, `--bg-active`, `--term-bg`, `--accent-bg`, `--accent-text`,
+  `--scrollbar*`, `--overlay`, `--shadow`) so one attribute flips the whole app. Colored buttons
+  get light-specific hues for contrast. Terminals switch to `XTERM_THEME_LIGHT` live.
+- Font size: `applyFontSize` sets `term.options.fontSize` on every terminal (server + scratch)
+  and refits; both xterm ctors now read `state.fontSize` / `currentXtermTheme()`.
+- `applyTheme` paints `data-theme` on `<html>` at launch from saved config, before first render.
+- Verified: dev boot clean; both themes rendered via headless preview (real styles.css) —
+  layout, segmented control, stepper, font preview, About grid all correct in dark and light.
+- Bump to 1.8.0.
+
 ## v1.7.2 changes
 - Fixed GPU/disk cache warnings on launch. On Windows, `src/main/index.js` relocates
   `sessionData` to `%LOCALAPPDATA%\iv-server-manager\cache` (+ `disk-cache-dir` switch) before

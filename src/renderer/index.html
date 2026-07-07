@@ -29,6 +29,7 @@
             <select id="defaultShell" class="select"></select>
           </label>
           <button id="addServer" class="btn btn-add" title="Add a new server">+ Add Server</button>
+          <button id="openSettings" class="btn btn-icon" title="Settings" aria-label="Settings">⚙</button>
         </div>
       </header>
 
@@ -135,6 +136,71 @@
             <button type="submit" class="btn btn-run">Save</button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Settings modal -->
+    <div id="settingsOverlay" class="modal-overlay hidden">
+      <div class="modal settings-modal">
+        <div class="settings-head">
+          <div class="settings-tabs" role="tablist">
+            <button id="tabBtnAppearance" class="tab active" role="tab">Appearance</button>
+            <button id="tabBtnAbout" class="tab" role="tab">About</button>
+          </div>
+          <button id="closeSettings" class="icon-close" title="Close" aria-label="Close">✕</button>
+        </div>
+
+        <!-- Appearance -->
+        <section id="tabAppearance" class="tab-panel">
+          <div class="setting">
+            <div class="setting-label">
+              <span class="setting-name">Theme</span>
+              <span class="setting-desc">Colors for the whole app, including terminals.</span>
+            </div>
+            <div id="themeSeg" class="segmented" role="group" aria-label="Theme">
+              <button class="seg-btn" data-theme="dark">◐ Dark</button>
+              <button class="seg-btn" data-theme="light">☀ Light</button>
+            </div>
+          </div>
+
+          <div class="setting">
+            <div class="setting-label">
+              <span class="setting-name">Terminal font size</span>
+              <span class="setting-desc">Applies to every log and the scratch terminal.</span>
+            </div>
+            <div class="stepper" role="group" aria-label="Font size">
+              <button id="fontDown" class="step-btn" aria-label="Smaller">−</button>
+              <span id="fontValue" class="step-value">13px</span>
+              <button id="fontUp" class="step-btn" aria-label="Larger">+</button>
+            </div>
+          </div>
+
+          <div class="font-preview">
+            <span id="fontPreview">backend $ yarn dev — ready on :5000</span>
+          </div>
+        </section>
+
+        <!-- About -->
+        <section id="tabAbout" class="tab-panel hidden">
+          <div class="about-brand">
+            <span class="about-logo">▚</span>
+            <div>
+              <div class="about-name">IV Server Manager</div>
+              <div class="about-ver">version <span id="aboutVersion">—</span></div>
+            </div>
+          </div>
+          <p class="about-tagline">
+            Run, restart, and watch every dev server from one window — live logs, per-server
+            shell &amp; git branch, port freeing, and a scratch terminal.
+          </p>
+          <dl class="about-grid">
+            <dt>Developer</dt><dd>ImpleVista</dd>
+            <dt>Built with</dt><dd>Electron · xterm.js · node-pty</dd>
+            <dt>License</dt><dd>MIT</dd>
+            <dt>Source</dt>
+            <dd><a href="#" id="aboutRepo" class="about-link">github.com/iftekharweb/iv-server-manager</a></dd>
+          </dl>
+        </section>
       </div>
     </div>
 

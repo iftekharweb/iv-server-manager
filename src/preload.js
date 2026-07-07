@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('api', {
   saveServer: (server) => ipcRenderer.invoke('config:saveServer', server),
   deleteServer: (id) => ipcRenderer.invoke('config:deleteServer', id),
   setDefaultShell: (shell) => ipcRenderer.invoke('config:setDefaultShell', shell),
+  setSettings: (settings) => ipcRenderer.invoke('config:setSettings', settings),
   reorder: (orderedIds) => ipcRenderer.invoke('config:reorder', orderedIds),
   pickFolder: () => ipcRenderer.invoke('dialog:pickFolder'),
   getVersion: () => ipcRenderer.invoke('app:version'),

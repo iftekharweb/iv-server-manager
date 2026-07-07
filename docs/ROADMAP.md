@@ -39,7 +39,10 @@ Roughly ordered by value vs. effort. Check items off as they ship.
       commands (install, git switch, migrations), opens in the active server's folder/shell.
 - [ ] **Split / tiled terminals** — view multiple server logs at once.
 - [ ] **Tabs instead of single panel** — keep several terminals visible via tabs.
-- [ ] **Theme options** — light theme + font-size control.
+- [x] **Theme options** — light theme + terminal font-size control, in a Settings modal
+      (gear icon right of Add Server) with an Appearance tab (Dark/Light segmented toggle,
+      font-size stepper 10–20px) and an About tab. Both persist in `servers.json` and apply
+      live to the UI and every terminal (xterm gets a matching light theme).
 - [ ] **Notifications** — OS toast when a server crashes or finishes building.
 - [x] **Cross-platform** — shell resolution, port-freeing, and process-kill are now
       platform-aware (Windows: cmd/powershell/Git-bash, netstat, taskkill; macOS/Linux:

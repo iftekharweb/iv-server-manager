@@ -109,6 +109,13 @@ whole stack with one click on the group's ▶.
 ### Default shell
 - The top-bar **Default shell** dropdown sets which shell new servers start with.
 
+### Settings (⚙)
+The **gear** button (right of *Add Server*) opens Settings, with two tabs:
+- **Appearance** — switch between **Dark** and **Light** theme, and set the **terminal font
+  size** (10–20px) with the − / + stepper. Both take effect immediately across the whole app
+  and every terminal, and are remembered in `servers.json`.
+- **About** — app version, developer, tech stack, license, and a link to the source repo.
+
 ### Scratch terminal (run ad-hoc commands)
 A collapsible terminal is docked on the right edge for one-off commands (install a package,
 switch a branch, run a migration) — separate from the per-server log terminals.

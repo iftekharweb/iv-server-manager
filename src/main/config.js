@@ -12,6 +12,19 @@ let configPath;
 const KNOWN_SHELLS = ['cmd', 'powershell', 'bash', 'zsh', 'sh'];
 const DEFAULT_SHELL = process.platform === 'win32' ? 'cmd' : 'bash';
 
+const THEMES = ['dark', 'light'];
+const DEFAULT_THEME = 'dark';
+const DEFAULT_FONT_SIZE = 13;
+const FONT_MIN = 10;
+const FONT_MAX = 20;
+
+const normTheme = (t) => (THEMES.includes(t) ? t : DEFAULT_THEME);
+function clampFont(n) {
+  const v = parseInt(n, 10);
+  if (!Number.isInteger(v)) return DEFAULT_FONT_SIZE;
+  return Math.min(FONT_MAX, Math.max(FONT_MIN, v));
+}
+
 function getConfigPath() {
   if (!configPath) {
     configPath = path.join(app.getPath('userData'), 'servers.json');
@@ -20,7 +33,7 @@ function getConfigPath() {
 }
 
 function defaultConfig() {
-  return { defaultShell: DEFAULT_SHELL, servers: [] };
+  return { defaultShell: DEFAULT_SHELL, theme: DEFAULT_THEME, fontSize: DEFAULT_FONT_SIZE, servers: [] };
 }
 
 /**
@@ -58,6 +71,8 @@ function load() {
     const parsed = JSON.parse(raw);
     return {
       defaultShell: KNOWN_SHELLS.includes(parsed.defaultShell) ? parsed.defaultShell : DEFAULT_SHELL,
+      theme: normTheme(parsed.theme),
+      fontSize: clampFont(parsed.fontSize),
       servers: Array.isArray(parsed.servers) ? parsed.servers.map(sanitizeServer) : [],
     };
   } catch (err) {
@@ -79,6 +94,8 @@ function save(config) {
   const p = getConfigPath();
   const clean = {
     defaultShell: KNOWN_SHELLS.includes(config.defaultShell) ? config.defaultShell : DEFAULT_SHELL,
+    theme: normTheme(config.theme),
+    fontSize: clampFont(config.fontSize),
     servers: Array.isArray(config.servers) ? config.servers.map(sanitizeServer) : [],
   };
   fs.mkdirSync(path.dirname(p), { recursive: true });

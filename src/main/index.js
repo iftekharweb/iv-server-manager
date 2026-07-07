@@ -95,6 +95,13 @@ function registerIpc() {
     return { config: cfg };
   });
 
+  ipcMain.handle('config:setSettings', (_e, { theme, fontSize } = {}) => {
+    const cfg = config.load();
+    if (theme !== undefined) cfg.theme = theme;
+    if (fontSize !== undefined) cfg.fontSize = fontSize;
+    return { config: config.save(cfg) }; // save() normalizes/clamps
+  });
+
   ipcMain.handle('config:reorder', (_e, orderedIds) => {
     const cfg = config.load();
     const byId = new Map(cfg.servers.map((s) => [s.id, s]));
