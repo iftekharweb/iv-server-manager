@@ -64,8 +64,9 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
 - Guards: checks run only when `app.isPackaged` — `npm start` and portable builds carry no
   `app-update.yml`, so they skip silently (feed errors are swallowed, no user-facing noise).
   Unsigned exe still triggers SmartScreen on each install (code-signing deferred).
-- Publish a release: `set GH_TOKEN=... & npm run dist -- --publish always` (uploads exe +
-  `latest.yml` to a GitHub Release). Must bump `version` each release or nothing updates.
+- Publish a release: set `GH_TOKEN` then `npm run dist:publish` (=`electron-builder --win
+  --publish always`; uploads exe + `latest.yml` to a GitHub Release). Must bump `version`
+  each release or nothing updates.
 - Verified: dev boot clean (electron ran ~10s, no stderr, updater skipped as unpackaged);
   `node --check` passed on all four changed JS files.
 

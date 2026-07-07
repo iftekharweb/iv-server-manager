@@ -239,11 +239,18 @@ If neither is set, the single-file build fails with
 Installed (NSIS) copies check GitHub Releases on launch, download a newer version in the
 background, and show a top-bar banner with a **Restart & Update** button. To ship an update
 that reaches existing installs, publish it to a GitHub Release instead of just building locally:
-```bash
-# Windows cmd — GH_TOKEN needs a personal access token with `repo` scope
-set GH_TOKEN=ghp_xxx
-npm run dist -- --publish always
+```powershell
+# PowerShell — GH_TOKEN needs a GitHub personal access token with `repo` scope
+$env:GH_TOKEN = "ghp_xxx"
+npm run dist:publish
 ```
+```cmd
+:: cmd.exe equivalent
+set GH_TOKEN=ghp_xxx
+npm run dist:publish
+```
+(`dist:publish` = `electron-builder --win --publish always`. Plain `npm run dist` builds
+without uploading.)
 This uploads the installer + a `latest.yml` metadata file to a Release on
 `iftekharweb/iv-server-manager`; the app reads that feed.
 
