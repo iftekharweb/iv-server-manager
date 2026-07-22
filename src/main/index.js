@@ -56,7 +56,17 @@ function createWindow() {
   });
 
   mainWindow.removeMenu();
-  mainWindow.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
+  // Dev: load the Vite dev server (set by scripts/dev.js). Packaged/prod: load the
+  // built renderer from build/renderer (base:'./' makes its assets resolve under
+  // file:// inside the asar). Using the env var — not app.isPackaged — means an
+  // unpackaged `npm start` with no dev server still loads the built file.
+  const devUrl = process.env.VITE_DEV_SERVER_URL;
+  if (devUrl) {
+    mainWindow.loadURL(devUrl);
+    mainWindow.webContents.openDevTools({ mode: 'detach' });
+  } else {
+    mainWindow.loadFile(path.join(__dirname, '..', '..', 'build', 'renderer', 'index.html'));
+  }
 
   mainWindow.on('closed', () => {
     mainWindow = null;
