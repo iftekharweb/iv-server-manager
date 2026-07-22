@@ -9,9 +9,9 @@ import { useApp } from './store/AppStore.jsx';
 export default function App() {
   const { state } = useApp();
   return (
-    <div id="app">
+    <div className="flex flex-col h-screen">
       <TopBar />
-      <div className="body">
+      <div className="flex flex-1 min-h-0">
         <ServerList />
         <TerminalPanel />
         <ScratchDock />

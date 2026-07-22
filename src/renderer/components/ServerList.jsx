@@ -29,7 +29,7 @@ export default function ServerList() {
   const onDragStart = (e) => {
     const li = e.target.closest('.server-item');
     if (!li) return;
-    li.classList.add('dragging');
+    li.classList.add('dragging', 'opacity-40');
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', li.dataset.id);
   };
@@ -44,7 +44,7 @@ export default function ServerList() {
   };
   const onDragEnd = (e) => {
     const li = e.target.closest('.server-item');
-    if (li) li.classList.remove('dragging');
+    if (li) li.classList.remove('dragging', 'opacity-40');
     const ids = [...listRef.current.querySelectorAll('.server-item')].map((n) => n.dataset.id);
     const current = servers.map((s) => s.id);
     if (ids.join() !== current.join()) actions.reorder(ids);
@@ -73,12 +73,12 @@ export default function ServerList() {
   }
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-head">
-        Servers <span className="count">{servers.length}</span>
+    <aside className="w-[260px] flex-none flex flex-col min-h-0 bg-l-bg2 dark:bg-d-bg2 border-r border-l-bd dark:border-d-bd">
+      <div className="px-3.5 py-2.5 text-[11px] tracking-[0.06em] uppercase text-l-dim dark:text-d-dim border-b border-l-bd dark:border-d-bd flex items-center gap-2">
+        Servers <span className="bg-l-bg3 dark:bg-d-bg3 rounded-[10px] px-[7px] py-px text-[11px]">{servers.length}</span>
       </div>
       <ul
-        className="server-list"
+        className="list-none m-0 p-1.5 overflow-y-auto flex-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         ref={listRef}
         onMouseDown={onMouseDown}
         onDragStart={onDragStart}
@@ -87,7 +87,7 @@ export default function ServerList() {
       >
         {body}
       </ul>
-      <div className={'empty-hint' + (servers.length ? ' hidden' : '')}>
+      <div className={'px-4 py-6 text-l-dim dark:text-d-dim text-center leading-relaxed' + (servers.length ? ' hidden' : '')}>
         No servers yet.<br />Click <b>+ Add Server</b> to create one.
       </div>
     </aside>

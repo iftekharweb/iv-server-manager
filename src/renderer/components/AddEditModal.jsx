@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useApp } from '../store/AppStore.jsx';
+import { overlay, modal, input, select, btnGhost, btnRun } from '../ui.js';
+
+const FIELD = 'block mb-[13px]';
+const LABEL = 'block text-l-dim dark:text-d-dim mb-[5px] text-[12px]';
 
 /** Guess a port from a run command: explicit -p/--port flag, else a trailing number. */
 function detectPort(command) {
@@ -60,35 +64,35 @@ export default function AddEditModal() {
   };
 
   return (
-    <div className="modal-overlay" onClick={(e) => e.target.classList.contains('modal-overlay') && actions.closeModal()}>
-      <div className="modal">
-        <div className="modal-head">{editing ? 'Edit Server' : 'Add Server'}</div>
+    <div className={`${overlay} modal-overlay`} onClick={(e) => e.target.classList.contains('modal-overlay') && actions.closeModal()}>
+      <div className={`${modal} w-[440px] max-w-[92vw] rounded-xl px-5 py-[18px]`}>
+        <div className="text-[15px] font-semibold mb-3.5">{editing ? 'Edit Server' : 'Add Server'}</div>
         <form onSubmit={submit}>
-          <label className="field">
-            <span>Name</span>
-            <input type="text" placeholder="backend" required autoComplete="off" autoFocus value={name} onChange={(e) => setName(e.target.value)} />
+          <label className={FIELD}>
+            <span className={LABEL}>Name</span>
+            <input className={input} type="text" placeholder="backend" required autoComplete="off" autoFocus value={name} onChange={(e) => setName(e.target.value)} />
           </label>
-          <label className="field">
-            <span>Group <small>(optional)</small></span>
-            <input type="text" placeholder="IVTrip" autoComplete="off" list="groupList" value={group} onChange={(e) => setGroup(e.target.value)} />
+          <label className={FIELD}>
+            <span className={LABEL}>Group <small className="text-grayL dark:text-gray font-normal">(optional)</small></span>
+            <input className={input} type="text" placeholder="IVTrip" autoComplete="off" list="groupList" value={group} onChange={(e) => setGroup(e.target.value)} />
             <datalist id="groupList">
               {groups.map((g) => <option key={g} value={g} />)}
             </datalist>
           </label>
-          <label className="field">
-            <span>Folder</span>
-            <div className="folder-row">
-              <input type="text" placeholder="C:\path\to\project" autoComplete="off" value={folder} onChange={(e) => setFolder(e.target.value)} />
-              <button type="button" className="btn btn-ghost" onClick={browse}>Browse…</button>
+          <label className={FIELD}>
+            <span className={LABEL}>Folder</span>
+            <div className="flex gap-2">
+              <input className={`${input} flex-1`} type="text" placeholder="C:\path\to\project" autoComplete="off" value={folder} onChange={(e) => setFolder(e.target.value)} />
+              <button type="button" className={btnGhost} onClick={browse}>Browse…</button>
             </div>
           </label>
-          <label className="field">
-            <span>Command</span>
-            <input type="text" placeholder="yarn dev" required autoComplete="off" value={command} onChange={(e) => setCommand(e.target.value)} />
+          <label className={FIELD}>
+            <span className={LABEL}>Command</span>
+            <input className={input} type="text" placeholder="yarn dev" required autoComplete="off" value={command} onChange={(e) => setCommand(e.target.value)} />
           </label>
-          <label className="field">
-            <span>Shell</span>
-            <select className="select" value={shell} onChange={(e) => setShell(e.target.value)}>
+          <label className={FIELD}>
+            <span className={LABEL}>Shell</span>
+            <select className={`${select} w-full`} value={shell} onChange={(e) => setShell(e.target.value)}>
               {Object.keys(shells).map((sh) => (
                 <option key={sh} value={sh} disabled={!shells[sh]}>
                   {shells[sh] ? sh : `${sh} (not found)`}
@@ -96,10 +100,10 @@ export default function AddEditModal() {
               ))}
             </select>
           </label>
-          <div className="form-error">{error}</div>
-          <div className="modal-actions">
-            <button type="button" className="btn btn-ghost" onClick={actions.closeModal}>Cancel</button>
-            <button type="submit" className="btn btn-run">Save</button>
+          <div className="text-dangerL dark:text-danger min-h-4 text-[12px] mb-1.5">{error}</div>
+          <div className="flex justify-end gap-2 mt-1">
+            <button type="button" className={btnGhost} onClick={actions.closeModal}>Cancel</button>
+            <button type="submit" className={btnRun}>Save</button>
           </div>
         </form>
       </div>

@@ -219,6 +219,25 @@ Renderer rewritten from one ~1000-line vanilla `app.js` to a React app bundled b
   `build/renderer` present, `@xterm`/`react` absent from `node_modules`, `@lydell` node-pty intact.
   Bump 1.9.2 → 1.10.0. (Live UI parity is a manual click-test.)
 
+## v1.10.1 changes — Tailwind CSS (all raw CSS dropped)
+- Styling moved to **Tailwind CSS v3**; the 460-line hand-written `src/renderer/styles.css` is
+  DELETED. Entry `src/renderer/index.css` holds only the three `@tailwind` directives.
+  `tailwind.config.cjs` (JS config) + `postcss.config.cjs` (tailwind + autoprefixer). Added
+  devDeps `tailwindcss`, `postcss`, `autoprefixer`.
+- Theme: dark is default; `darkMode: ['selector','[data-theme="dark"]']` — unprefixed utilities
+  are LIGHT, `dark:` variants apply when `<html data-theme="dark">` (store still flips it at
+  runtime). Palette lives in the config as `d`/`l` color families + fixed `accent`/status hues.
+  `<html data-theme="dark">` set in index.html to avoid a light flash before React.
+- `src/renderer/ui.js` centralizes reusable class strings (btn variants, select, mini, input,
+  overlay, modal, dotClass). Every component's `className`s rewritten to utilities; the
+  TerminalManager's created `.term-host` nodes now use utility classes and toggle `hidden`
+  (was `.visible`). Marker classes kept only as JS hooks (`server-item`, `mini`, `modal-overlay`).
+- Custom webkit scrollbars dropped (now default browser scrollbars) — the only intentional
+  visual change; everything else ports the prior look 1:1.
+- Verified: `vite build` clean (58 modules, CSS 27.9 kB); generated CSS contains the
+  `[data-theme=dark]` variant, `writing-mode:vertical-rl` rail, and the `.xterm` height rule;
+  `npm run dev` mounts with no console errors. Bump 1.10.0 → 1.10.1. (Pixel parity = manual check.)
+
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
   original node-pty failed: VS Build Tools C++ workload absent).

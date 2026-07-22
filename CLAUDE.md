@@ -33,6 +33,10 @@ Then open only the specific `src/` file a task touches.
   owns chrome + state (`store/AppStore.jsx` Context+reducer, `components/*`). Icons via `react-icons`.
   `@xterm/*` + `react*` are devDependencies (Vite bundles them); runtime deps are just
   `@lydell/node-pty` + `electron-updater`.
+- Styling is **Tailwind CSS v3** (since v1.10.1); there is NO hand-written stylesheet. Config in
+  `tailwind.config.cjs` (dark default via `[data-theme="dark"]`; `d`/`l` color families), entry
+  `src/renderer/index.css` is just `@tailwind` directives, reusable class strings in
+  `src/renderer/ui.js`. Restyle by editing component `className`s / `ui.js` / the config.
 - Config persists at `%APPDATA%\iv-server-manager\servers.json` (outside the app; survives updates).
 - Branch `main`; remote `origin` = https://github.com/iftekharweb/iv-server-manager.git
 - GPU disk-cache errors on launch are harmless (OneDrive path).
@@ -60,7 +64,9 @@ src/renderer/store/        AppStore.jsx (Context + useReducer, actions, bootstra
 src/renderer/lib/          terminalManager.js (imperative xterm engine, outside React)
 src/renderer/components/   TopBar, ServerList/ServerItem/GroupHeader, TerminalPanel/SearchBar,
                            ScratchDock, AddEditModal, SettingsModal, UpdateBanner
-src/renderer/styles.css    theme + layout (class-based, data-theme)
+src/renderer/index.css     Tailwind entry (@tailwind directives only)
+src/renderer/ui.js         shared Tailwind class strings (buttons, inputs, dots…)
+tailwind.config.cjs        Tailwind config (dark via data-theme, d/l color palette)
 vite.config.js             renderer build (root src/renderer, base './', outDir build/renderer)
 scripts/dev.js             dev launcher (Vite server + Electron with VITE_DEV_SERVER_URL)
 ```

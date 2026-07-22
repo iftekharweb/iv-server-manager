@@ -183,7 +183,8 @@ class TerminalManager {
     if (this.terms.get(id)) return this.terms.get(id);
 
     const host = document.createElement('div');
-    host.className = 'term-host';
+    // Tailwind: fills the .term-mount layer; hidden until shown; xterm fills it.
+    host.className = 'absolute inset-0 hidden pt-1.5 pr-1 pb-1 pl-2 [&_.xterm]:h-full';
     host.dataset.id = id;
     if (this.termsHost) this.termsHost.appendChild(host);
 
@@ -195,7 +196,7 @@ class TerminalManager {
     term.onData((data) => window.api.sendInput(id, data));
 
     const resizeObs = new ResizeObserver(() => {
-      if (host.classList.contains('visible')) this._refit(this.terms.get(id), id);
+      if (!host.classList.contains('hidden')) this._refit(this.terms.get(id), id);
     });
     resizeObs.observe(host);
 
@@ -207,7 +208,7 @@ class TerminalManager {
   /** Show one server terminal, hide the rest; fit + focus after paint. */
   show(id) {
     const entry = this.ensureTerm(id);
-    this.terms.forEach((t, tid) => t.host.classList.toggle('visible', tid === id));
+    this.terms.forEach((t, tid) => t.host.classList.toggle('hidden', tid !== id));
     requestAnimationFrame(() => {
       this._refit(entry, id);
       entry.term.focus();
@@ -291,7 +292,7 @@ class TerminalManager {
 
     const ptyId = this.scratchIdFor(key);
     const host = document.createElement('div');
-    host.className = 'term-host';
+    host.className = 'absolute inset-0 hidden pt-1.5 pr-1 pb-1 pl-2 [&_.xterm]:h-full';
     host.dataset.id = ptyId;
     if (this.scratchHost) this.scratchHost.appendChild(host);
 
@@ -304,7 +305,7 @@ class TerminalManager {
 
     const entry = { term, fit, search, host, resizeObs: null, started: false, cwd: '' };
     entry.resizeObs = new ResizeObserver(() => {
-      if (host.classList.contains('visible')) this._refit(entry, ptyId);
+      if (!host.classList.contains('hidden')) this._refit(entry, ptyId);
     });
     entry.resizeObs.observe(host);
 
@@ -315,7 +316,7 @@ class TerminalManager {
   /** Show one server's scratch host, hide the rest. Returns the shown cwd. */
   showScratch(key) {
     this.scratches.forEach((entry, k) => {
-      entry.host.classList.toggle('visible', k === key);
+      entry.host.classList.toggle('hidden', k !== key);
     });
     const entry = this.scratches.get(key);
     return (entry && entry.cwd) || '';

@@ -321,11 +321,19 @@ custom-terminal/
 │  │  ├─ updater.js        # auto-update via electron-updater + GitHub Releases
 │  │  └─ serverManager.js  # pty spawn/restart/stop, taskkill trees
 │  ├─ preload.js           # secure bridge → window.api
-│  └─ renderer/            # the UI (runs in the window)
-│     ├─ index.html        # layout
-│     ├─ styles.css        # dark theme
-│     └─ app.js            # list rendering, xterm terminals, modal, buttons
-└─ dist/                   # build output (created by npm run dist)
+│  └─ renderer/            # the UI — React + Vite, Tailwind CSS
+│     ├─ index.html        # Vite entry (root div + module script)
+│     ├─ index.css         # Tailwind entry (@tailwind directives only)
+│     ├─ main.jsx          # React bootstrap
+│     ├─ App.jsx           # layout shell
+│     ├─ ui.js             # shared Tailwind class strings
+│     ├─ store/            # AppStore.jsx (Context + reducer)
+│     ├─ lib/              # terminalManager.js (imperative xterm engine)
+│     └─ components/       # TopBar, ServerList, TerminalPanel, ScratchDock, modals…
+├─ tailwind.config.cjs     # Tailwind config (dark via data-theme, d/l palette)
+├─ vite.config.js          # renderer build (outDir build/renderer)
+├─ build/renderer/         # bundled renderer (created by vite build; gitignored)
+└─ dist/                   # packaged app (created by npm run dist)
 ```
 
 ---
@@ -366,7 +374,7 @@ launch child `node` processes that a plain kill would orphan.
 |------------|---------|
 | Change window size / title | `src/main/index.js` → `new BrowserWindow({ width, height, title })` |
 | Add a new shell type | `src/main/shells.js` → add a case in `resolveShell` + option in the two `<select>`s in `index.html` |
-| Change colors / theme | `src/renderer/styles.css` (`:root` variables) and `XTERM_THEME` in `src/renderer/app.js` |
+| Change colors / theme | Tailwind utility classes on components + `src/renderer/ui.js`; palette in `tailwind.config.cjs` (`d`/`l` families); terminal colors `XTERM_THEME_*` in `src/renderer/lib/terminalManager.js` |
 | Change how much log is kept for Copy/Save | `MAX_BUFFER` in `src/renderer/app.js` |
 | Add a button / UI element | markup in `src/renderer/index.html`, wire it in `src/renderer/app.js`, add any IPC in `preload.js` + `src/main/index.js` |
 | Change config location/shape | `src/main/config.js` |

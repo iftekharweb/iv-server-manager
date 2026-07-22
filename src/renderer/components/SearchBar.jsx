@@ -48,9 +48,12 @@ export default function SearchBar() {
   };
 
   const countLabel = count > 0 ? `${index + 1}/${count}` : count === 0 ? 'no matches' : '';
+  const sbtn =
+    'inline-flex items-center justify-center bg-l-bg3 dark:bg-d-bg3 border border-l-bd dark:border-d-bd ' +
+    'text-l-tx dark:text-d-tx rounded-[5px] px-2 py-1 cursor-pointer text-[12px] hover:bg-l-hv dark:hover:bg-d-hv';
 
   return (
-    <div className="search-bar">
+    <div className="absolute top-2 right-4 z-10 flex items-center gap-1 rounded-lg px-1.5 py-[5px] bg-l-bg2 dark:bg-d-bg2 border border-l-bd dark:border-d-bd shadow-[0_6px_20px_rgba(0,0,0,0.4)]">
       <input
         ref={inputRef}
         type="text"
@@ -59,11 +62,12 @@ export default function SearchBar() {
         value={q}
         onChange={onChange}
         onKeyDown={onKeyDown}
+        className="bg-l-bg3 dark:bg-d-bg3 border border-l-bd dark:border-d-bd text-l-tx dark:text-d-tx rounded-[5px] px-2 py-[5px] text-[12.5px] w-[200px] outline-none focus:border-accentL dark:focus:border-accent select-text"
       />
-      <span className="search-count">{countLabel}</span>
-      <button className="search-btn" title="Previous (Shift+Enter)" onClick={() => runSearch('prev', q)}><FiChevronUp /></button>
-      <button className="search-btn" title="Next (Enter)" onClick={() => runSearch('next', q)}><FiChevronDown /></button>
-      <button className="search-btn" title="Close (Esc)" onClick={close}><FiX /></button>
+      <span className="text-l-dim dark:text-d-dim text-[11px] min-w-[52px] text-center">{countLabel}</span>
+      <button className={sbtn} title="Previous (Shift+Enter)" onClick={() => runSearch('prev', q)}><FiChevronUp /></button>
+      <button className={sbtn} title="Next (Enter)" onClick={() => runSearch('next', q)}><FiChevronDown /></button>
+      <button className={sbtn} title="Close (Esc)" onClick={close}><FiX /></button>
     </div>
   );
 }

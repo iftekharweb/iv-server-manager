@@ -1,10 +1,14 @@
 import { FiPlay, FiRefreshCw, FiSquare, FiEdit2, FiTrash2, FiGitBranch } from 'react-icons/fi';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { useApp } from '../store/AppStore.jsx';
+import { mini, dotClass, dotBase } from '../ui.js';
 
-function dotClass(st) {
-  return st === 'running' ? 'dot-running' : st === 'error' ? 'dot-error' : 'dot-stopped';
-}
+// `server-item` is kept as a marker class only (querySelector hook for drag-reorder).
+const ITEM_BASE =
+  'server-item border rounded-lg px-2.5 py-[9px] mb-1.5 cursor-pointer bg-l-bg3 dark:bg-d-bg3';
+const ITEM_IDLE = 'border-transparent hover:border-l-bd dark:hover:border-d-bd';
+const ITEM_ACTIVE = 'border-accentL dark:border-accent bg-l-ac dark:bg-d-ac';
+const TAG = 'text-[10.5px] text-l-dim dark:text-d-dim border border-l-bd dark:border-d-bd rounded px-[5px]';
 
 export default function ServerItem({ server: s }) {
   const { state, actions } = useApp();
@@ -14,7 +18,7 @@ export default function ServerItem({ server: s }) {
   const active = s.id === state.activeId;
 
   const onCardClick = (e) => {
-    if (e.target.closest('.mini')) return; // action buttons handle themselves
+    if (e.target.closest('.mini')) return;
     actions.select(s.id);
   };
 
@@ -25,29 +29,27 @@ export default function ServerItem({ server: s }) {
   const del = () => { if (confirm(`Delete server "${s.name}"?`)) actions.removeServer(s.id); };
 
   return (
-    <li className={'server-item' + (active ? ' active' : '')} data-id={s.id} draggable onClick={onCardClick}>
-      <div className="row1">
-        <span className="grip" title="Drag to reorder"><RxDragHandleDots2 /></span>
-        <span className={'dot ' + dotClass(st)}></span>
-        <span className="name" title={s.name}>{s.name}</span>
-        {s.port ? (
-          <span className="shell-tag" title="Port freed on stop/restart">:{s.port}</span>
-        ) : null}
-        <span className="shell-tag">{s.shell}</span>
+    <li className={`${ITEM_BASE} ${active ? ITEM_ACTIVE : ITEM_IDLE}`} data-id={s.id} draggable onClick={onCardClick}>
+      <div className="flex items-center gap-2">
+        <span className="mini-grip inline-flex items-center text-grayL dark:text-gray cursor-grab text-[12px] leading-none mr-0.5" title="Drag to reorder"><RxDragHandleDots2 /></span>
+        <span className={`${dotBase} ${dotClass(st)}`}></span>
+        <span className="font-semibold flex-1 overflow-hidden text-ellipsis whitespace-nowrap" title={s.name}>{s.name}</span>
+        {s.port ? <span className={TAG} title="Port freed on stop/restart">:{s.port}</span> : null}
+        <span className={TAG}>{s.shell}</span>
       </div>
-      <div className="cmd" title={`${s.folder} — ${s.command}`}>{s.command}</div>
+      <div className="text-l-dim dark:text-d-dim text-[11px] mt-1 overflow-hidden text-ellipsis whitespace-nowrap" title={`${s.folder} — ${s.command}`}>{s.command}</div>
       {info ? (
-        <div className="branch" title={`git branch${info.dirty ? ' (uncommitted changes)' : ''}`}>
+        <div className="flex items-center gap-1 text-l-atx dark:text-d-atx text-[10.5px] mt-[3px] overflow-hidden text-ellipsis whitespace-nowrap" title={`git branch${info.dirty ? ' (uncommitted changes)' : ''}`}>
           <FiGitBranch /> {info.branch}
-          {info.dirty ? <span className="dirty" title="uncommitted changes"> ●</span> : null}
+          {info.dirty ? <span className="text-amberL dark:text-amber text-[9px] align-middle" title="uncommitted changes"> ●</span> : null}
         </div>
       ) : null}
-      <div className="actions">
-        <button className="mini" data-act="run" onClick={run}><FiPlay /> {running ? 'Running' : 'Run'}</button>
-        <button className="mini" data-act="restart" title="Restart" onClick={restart}><FiRefreshCw /></button>
-        <button className="mini" data-act="stop" title="Stop" onClick={stop}><FiSquare /></button>
-        <button className="mini icon" data-act="edit" title="Edit" onClick={edit}><FiEdit2 /></button>
-        <button className="mini icon" data-act="delete" title="Delete" onClick={del}><FiTrash2 /></button>
+      <div className="flex gap-1 mt-2">
+        <button className={`mini ${mini} flex-1`} onClick={run}><FiPlay /> {running ? 'Running' : 'Run'}</button>
+        <button className={`mini ${mini} flex-1`} title="Restart" onClick={restart}><FiRefreshCw /></button>
+        <button className={`mini ${mini} flex-1`} title="Stop" onClick={stop}><FiSquare /></button>
+        <button className={`mini ${mini} flex-none basis-7`} title="Edit" onClick={edit}><FiEdit2 /></button>
+        <button className={`mini ${mini} flex-none basis-7`} title="Delete" onClick={del}><FiTrash2 /></button>
       </div>
     </li>
   );

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { FiTerminal, FiX, FiChevronsRight } from 'react-icons/fi';
 import { useApp } from '../store/AppStore.jsx';
 import { terminalManager as tm } from '../lib/terminalManager.js';
+import { btnGhost } from '../ui.js';
 
 export default function ScratchDock() {
   const { state, actions } = useApp();
@@ -65,23 +66,43 @@ export default function ScratchDock() {
   const widthStyle = open && state.ui.scratchWidth ? { width: `${state.ui.scratchWidth}px` } : undefined;
 
   return (
-    <section className={'scratch-dock' + (open ? '' : ' collapsed')} style={widthStyle}>
-      <div className="scratch-resizer" title="Drag to resize" onMouseDown={startResize}></div>
-      <button className="scratch-rail" title="Open a terminal" onClick={expand}><FiTerminal /> Terminal</button>
-      <div className="scratch-body">
-        <div className="scratch-head">
-          <div className="scratch-title">
-            <span><FiTerminal /> Terminal</span>
-            <span className="scratch-cwd">{cwd}</span>
+    <section
+      className={
+        'relative flex-none flex flex-col min-h-0 bg-l-term dark:bg-d-term border-l border-l-bd dark:border-d-bd ' +
+        (open ? 'w-[42vw] max-w-[50vw] min-w-[300px]' : 'w-9 min-w-9')
+      }
+      style={widthStyle}
+    >
+      <div
+        className={(open ? '' : 'hidden ') + 'absolute -left-[3px] top-0 bottom-0 w-1.5 cursor-col-resize z-[5] hover:bg-accent/50'}
+        title="Drag to resize"
+        onMouseDown={startResize}
+      ></div>
+      <button
+        className={
+          (open ? 'hidden ' : 'inline-flex ') +
+          'w-9 h-full border-0 cursor-pointer items-center justify-center gap-1.5 [writing-mode:vertical-rl] [text-orientation:mixed] text-[12px] tracking-[0.08em] ' +
+          'bg-l-bg2 dark:bg-d-bg2 text-l-dim dark:text-d-dim hover:bg-l-bg3 dark:hover:bg-d-bg3 hover:text-l-tx dark:hover:text-d-tx'
+        }
+        title="Open a terminal"
+        onClick={expand}
+      >
+        <FiTerminal /> Terminal
+      </button>
+      <div className={(open ? 'flex ' : 'hidden ') + 'flex-col flex-1 min-h-0'}>
+        <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-l-bd dark:border-d-bd bg-l-bg2 dark:bg-d-bg2">
+          <div className="flex items-baseline gap-2 font-semibold min-w-0">
+            <span className="inline-flex items-center gap-1.5"><FiTerminal /> Terminal</span>
+            <span className="text-l-dim dark:text-d-dim font-normal text-[11px] overflow-hidden text-ellipsis whitespace-nowrap [direction:rtl] max-w-[40vw]">{cwd}</span>
           </div>
-          <div className="scratch-actions">
-            <button className="btn btn-ghost" title="Clear" onClick={clear}><FiX /> Clear</button>
-            <button className="btn btn-ghost" title="Minimize" onClick={collapse}><FiChevronsRight /> Hide</button>
+          <div className="flex gap-1.5 flex-none">
+            <button className={btnGhost} title="Clear" onClick={clear}><FiX /> Clear</button>
+            <button className={btnGhost} title="Minimize" onClick={collapse}><FiChevronsRight /> Hide</button>
           </div>
         </div>
         {/* Manager appends the per-server scratch .term-host children here. */}
-        <div className="scratch-term">
-          <div className="scratch-mount" ref={mountRef} />
+        <div className="flex-1 min-h-0 relative">
+          <div className="absolute inset-0" ref={mountRef} />
         </div>
       </div>
     </section>

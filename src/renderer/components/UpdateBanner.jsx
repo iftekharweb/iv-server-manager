@@ -1,4 +1,9 @@
 import { useEffect, useState } from 'react';
+import { btnRun } from '../ui.js';
+
+const BAR =
+  'flex items-center gap-2 mx-auto px-2.5 py-[3px] rounded-full text-[12px] ' +
+  'border border-accentL dark:border-accent bg-l-abg dark:bg-d-abg';
 
 // Independent widget: subscribes to auto-update status and shows a top-bar
 // banner with a Restart & Update button once a download is ready.
@@ -11,7 +16,7 @@ export default function UpdateBanner() {
     return window.api.onUpdateStatus((payload) => setSt(payload));
   }, []);
 
-  if (!st) return <div className="update-bar hidden" />;
+  if (!st) return <div className="hidden" />;
 
   let text = '';
   let ready = false;
@@ -27,15 +32,15 @@ export default function UpdateBanner() {
       ready = true;
       break;
     default:
-      return <div className="update-bar hidden" />;
+      return <div className="hidden" />;
   }
 
   return (
-    <div className="update-bar">
-      <span className="update-text">{installing ? 'Restarting…' : text}</span>
+    <div className={BAR}>
+      <span className="text-l-atx dark:text-d-atx whitespace-nowrap">{installing ? 'Restarting…' : text}</span>
       {ready && (
         <button
-          className="btn btn-run"
+          className={btnRun}
           title="Restart and install the update"
           disabled={installing}
           onClick={() => {

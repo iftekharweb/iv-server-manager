@@ -1,6 +1,7 @@
 import { FiPlay, FiRefreshCw, FiSquare, FiPlus, FiSettings } from 'react-icons/fi';
 import { useApp } from '../store/AppStore.jsx';
 import UpdateBanner from './UpdateBanner.jsx';
+import { btnRun, btnRestart, btnStop, btnAdd, btnIcon, select } from '../ui.js';
 
 export default function TopBar() {
   const { state, actions } = useApp();
@@ -17,27 +18,23 @@ export default function TopBar() {
   };
 
   return (
-    <header className="topbar">
-      <div className="brand">
-        <span className="logo">▚</span>
-        <span className="brand-name">IV Server Manager</span>
-        <span className="app-version">{version ? `v${version}` : ''}</span>
+    <header className="flex items-center justify-between gap-3 px-3.5 py-2 flex-none bg-l-bg2 dark:bg-d-bg2 border-b border-l-bd dark:border-d-bd">
+      <div className="flex items-center gap-2 font-semibold">
+        <span className="text-accentL dark:text-accent text-base">▚</span>
+        <span>IV Server Manager</span>
+        <span className="text-l-dim dark:text-d-dim text-[11px] font-normal ml-0.5">{version ? `v${version}` : ''}</span>
       </div>
 
       <UpdateBanner />
 
-      <div className="top-actions">
-        <button className="btn btn-run" title="Start every server" onClick={runAll}><FiPlay /> Run All</button>
-        <button className="btn btn-restart" title="Restart every server" onClick={restartAll}><FiRefreshCw /> Restart All</button>
-        <button className="btn btn-stop" title="Stop every server" onClick={stopAll}><FiSquare /> Stop All</button>
-        <span className="divider"></span>
-        <label className="shell-label">
+      <div className="flex items-center gap-2">
+        <button className={btnRun} title="Start every server" onClick={runAll}><FiPlay /> Run All</button>
+        <button className={btnRestart} title="Restart every server" onClick={restartAll}><FiRefreshCw /> Restart All</button>
+        <button className={btnStop} title="Stop every server" onClick={stopAll}><FiSquare /> Stop All</button>
+        <span className="w-px h-[22px] bg-l-bd dark:bg-d-bd mx-1"></span>
+        <label className="text-l-dim dark:text-d-dim flex items-center gap-1.5">
           Default shell
-          <select
-            className="select"
-            value={config.defaultShell}
-            onChange={(e) => actions.setDefaultShell(e.target.value)}
-          >
+          <select className={select} value={config.defaultShell} onChange={(e) => actions.setDefaultShell(e.target.value)}>
             {Object.keys(shells).map((sh) => (
               <option key={sh} value={sh} disabled={!shells[sh]}>
                 {shells[sh] ? sh : `${sh} (not found)`}
@@ -45,11 +42,11 @@ export default function TopBar() {
             ))}
           </select>
         </label>
-        <button className="btn btn-add" title="Add a new server" onClick={() => actions.openModal(null)}>
+        <button className={btnAdd} title="Add a new server" onClick={() => actions.openModal(null)}>
           <FiPlus /> Add Server
         </button>
         <button
-          className="btn btn-icon"
+          className={btnIcon}
           title="Settings"
           aria-label="Settings"
           onClick={() => actions.setUi({ settingsOpen: true, settingsTab: 'appearance' })}

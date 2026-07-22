@@ -3,10 +3,7 @@ import { FiCopy, FiX, FiDownload } from 'react-icons/fi';
 import { useApp } from '../store/AppStore.jsx';
 import { terminalManager as tm } from '../lib/terminalManager.js';
 import SearchBar from './SearchBar.jsx';
-
-function dotClass(st) {
-  return st === 'running' ? 'dot-running' : st === 'error' ? 'dot-error' : 'dot-stopped';
-}
+import { btnGhost, dotClass, dotBase } from '../ui.js';
 
 export default function TerminalPanel() {
   const { state, actions } = useApp();
@@ -57,26 +54,26 @@ export default function TerminalPanel() {
   const branchTxt = info ? ` · ⎇ ${info.branch}${info.dirty ? ' ●' : ''}` : '';
 
   return (
-    <main className="panel">
-      <div className="panel-head">
-        <div className="panel-title">
-          <span className={'dot ' + (server ? dotClass(st) : 'dot-off')}></span>
+    <main className="flex-1 flex flex-col min-w-0 min-h-0 bg-l-bg dark:bg-d-bg">
+      <div className="flex items-center justify-between px-3.5 py-[9px] border-b border-l-bd dark:border-d-bd bg-l-bg2 dark:bg-d-bg2">
+        <div className="flex items-center gap-[9px] font-semibold min-w-0">
+          <span className={`${dotBase} ${server ? dotClass(st) : 'bg-grayL dark:bg-gray'}`}></span>
           <span>{server ? server.name : 'No server selected'}</span>
-          <span className="meta">
+          <span className="text-l-dim dark:text-d-dim font-normal text-[11.5px]">
             {server ? `· ${st} · ${server.shell}${branchTxt} · ${server.command}` : ''}
           </span>
         </div>
-        <div className="panel-actions">
-          <button className="btn btn-ghost" title="Copy selection, or all logs if nothing is selected" onClick={onCopy}><FiCopy /> {copyLabel}</button>
-          <button className="btn btn-ghost" title="Clear the view" onClick={onClear}><FiX /> Clear</button>
-          <button className="btn btn-ghost" title="Save logs to a file" onClick={onSave}><FiDownload /> {saveLabel}</button>
+        <div className="flex gap-1.5">
+          <button className={btnGhost} title="Copy selection, or all logs if nothing is selected" onClick={onCopy}><FiCopy /> {copyLabel}</button>
+          <button className={btnGhost} title="Clear the view" onClick={onClear}><FiX /> Clear</button>
+          <button className={btnGhost} title="Save logs to a file" onClick={onSave}><FiDownload /> {saveLabel}</button>
         </div>
       </div>
-      <div className="terminals">
+      <div className="flex-1 relative min-h-0">
         {/* Manager appends .term-host children here; React keeps it empty. */}
-        <div className="term-mount" ref={mountRef} />
+        <div className="absolute inset-0" ref={mountRef} />
         {!activeId && (
-          <div className="no-term">Select a server, then press Run to see its live output here.</div>
+          <div className="absolute inset-0 flex items-center justify-center text-l-dim dark:text-d-dim text-center p-5">Select a server, then press Run to see its live output here.</div>
         )}
         {state.ui.searchOpen && <SearchBar />}
       </div>
