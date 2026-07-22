@@ -1,7 +1,7 @@
 {
   "name": "iv-server-manager",
   "productName": "IV Server Manager",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "Desktop app to run, restart, and view logs for any dev server.",
   "main": "src/main/index.js",
   "author": "ImpleVista",

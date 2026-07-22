@@ -182,6 +182,12 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   auto-detect, no field). Bump 1.9.0 → 1.9.1.
 - Verified: `node --check` on app.js; no remaining `fPort` references.
 
+## v1.9.2 changes — About section developer info
+- Settings ▸ About now credits the developer: **Iftekhar Md Shishir** — Software Engineer at
+  ImpleVista, University of Rajshahi, iftekharweb@gmail.com. Added Role / Education / Contact
+  rows to the About grid (`src/renderer/index.html`); email is plain selectable text (the
+  renderer's `openExternal` only allows http(s), so a mailto link wouldn't open). Bump → 1.9.2.
+
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
   original node-pty failed: VS Build Tools C++ workload absent).
