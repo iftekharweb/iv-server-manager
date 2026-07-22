@@ -25,7 +25,14 @@ Then open only the specific `src/` file a task touches.
   prebuilt N-API and works under Electron without a rebuild.
 - Single-file `.exe` build needs Windows **Developer Mode ON** (already enabled) or an admin
   terminal — else winCodeSign 7z symlink extraction fails. Folder build is unaffected.
-- Dev: `npm start`. Build: `npm run dist` → `dist/` (portable + NSIS installer + win-unpacked).
+- Renderer is **React + Vite** (since v1.10.0). Dev: `npm run dev` (Vite dev server + Electron +
+  HMR, via `scripts/dev.js`). `npm start` runs Electron against the last `build/renderer` build
+  (no dev server). Build: `npm run dist` (runs `vite build` → `build/renderer/` first, then
+  electron-builder) → `dist/`. Renderer bundle output is `build/renderer/` (gitignored), NOT `dist/`.
+- xterm engine stays imperative in `src/renderer/lib/terminalManager.js` (outside React); React
+  owns chrome + state (`store/AppStore.jsx` Context+reducer, `components/*`). Icons via `react-icons`.
+  `@xterm/*` + `react*` are devDependencies (Vite bundles them); runtime deps are just
+  `@lydell/node-pty` + `electron-updater`.
 - Config persists at `%APPDATA%\iv-server-manager\servers.json` (outside the app; survives updates).
 - Branch `main`; remote `origin` = https://github.com/iftekharweb/iv-server-manager.git
 - GPU disk-cache errors on launch are harmless (OneDrive path).
@@ -46,7 +53,16 @@ src/main/git.js            current branch of a folder
 src/main/updater.js        auto-update via electron-updater + GitHub Releases feed
 src/main/serverManager.js  pty spawn/restart/stop, taskkill trees; scratch terminal (SCRATCH_ID)
 src/preload.js             contextBridge -> window.api
-src/renderer/*             UI (index.html, styles.css, app.js)
+src/renderer/index.html    Vite entry (root div + module script + prod CSP)
+src/renderer/main.jsx      React bootstrap (imports styles.css + xterm css)
+src/renderer/App.jsx       layout shell
+src/renderer/store/        AppStore.jsx (Context + useReducer, actions, bootstrap)
+src/renderer/lib/          terminalManager.js (imperative xterm engine, outside React)
+src/renderer/components/   TopBar, ServerList/ServerItem/GroupHeader, TerminalPanel/SearchBar,
+                           ScratchDock, AddEditModal, SettingsModal, UpdateBanner
+src/renderer/styles.css    theme + layout (class-based, data-theme)
+vite.config.js             renderer build (root src/renderer, base './', outDir build/renderer)
+scripts/dev.js             dev launcher (Vite server + Electron with VITE_DEV_SERVER_URL)
 ```
 
 ## Features

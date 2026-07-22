@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { FiX, FiMoon, FiSun, FiMinus, FiPlus } from 'react-icons/fi';
 import { useApp } from '../store/AppStore.jsx';
 import { FONT_MIN, FONT_MAX } from '../lib/terminalManager.js';
 
@@ -33,7 +34,7 @@ export default function SettingsModal() {
             <button className={'tab' + (tab === 'appearance' ? ' active' : '')} role="tab" onClick={() => showTab('appearance')}>Appearance</button>
             <button className={'tab' + (tab === 'about' ? ' active' : '')} role="tab" onClick={() => showTab('about')}>About</button>
           </div>
-          <button className="icon-close" title="Close" aria-label="Close" onClick={close}>✕</button>
+          <button className="icon-close" title="Close" aria-label="Close" onClick={close}><FiX /></button>
         </div>
 
         <section className={'tab-panel' + (tab === 'appearance' ? '' : ' hidden')}>
@@ -43,8 +44,8 @@ export default function SettingsModal() {
               <span className="setting-desc">Colors for the whole app, including terminals.</span>
             </div>
             <div className="segmented" role="group" aria-label="Theme">
-              <button className={'seg-btn' + (theme === 'dark' ? ' active' : '')} onClick={() => actions.setTheme('dark')}>◐ Dark</button>
-              <button className={'seg-btn' + (theme === 'light' ? ' active' : '')} onClick={() => actions.setTheme('light')}>☀ Light</button>
+              <button className={'seg-btn' + (theme === 'dark' ? ' active' : '')} onClick={() => actions.setTheme('dark')}><FiMoon /> Dark</button>
+              <button className={'seg-btn' + (theme === 'light' ? ' active' : '')} onClick={() => actions.setTheme('light')}><FiSun /> Light</button>
             </div>
           </div>
 
@@ -54,9 +55,9 @@ export default function SettingsModal() {
               <span className="setting-desc">Applies to every log and the scratch terminal.</span>
             </div>
             <div className="stepper" role="group" aria-label="Font size">
-              <button className="step-btn" aria-label="Smaller" disabled={fontSize <= FONT_MIN} onClick={() => bumpFont(-1)}>−</button>
+              <button className="step-btn" aria-label="Smaller" disabled={fontSize <= FONT_MIN} onClick={() => bumpFont(-1)}><FiMinus /></button>
               <span className="step-value">{fontSize}px</span>
-              <button className="step-btn" aria-label="Larger" disabled={fontSize >= FONT_MAX} onClick={() => bumpFont(1)}>+</button>
+              <button className="step-btn" aria-label="Larger" disabled={fontSize >= FONT_MAX} onClick={() => bumpFont(1)}><FiPlus /></button>
             </div>
           </div>
 

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { FiCopy, FiX, FiDownload } from 'react-icons/fi';
 import { useApp } from '../store/AppStore.jsx';
 import { terminalManager as tm } from '../lib/terminalManager.js';
 import SearchBar from './SearchBar.jsx';
@@ -11,8 +12,8 @@ export default function TerminalPanel() {
   const { state, actions } = useApp();
   const { activeId } = state;
   const mountRef = useRef(null);
-  const [copyLabel, setCopyLabel] = useState('⧉ Copy');
-  const [saveLabel, setSaveLabel] = useState('⤓ Save');
+  const [copyLabel, setCopyLabel] = useState('Copy');
+  const [saveLabel, setSaveLabel] = useState('Save');
 
   useEffect(() => {
     tm.attach(mountRef.current);
@@ -44,13 +45,13 @@ export default function TerminalPanel() {
 
   const onCopy = () => {
     const r = tm.copy(activeId);
-    if (r) flash(setCopyLabel, '⧉ Copy', r.mode === 'selection' ? 'Copied selection' : 'Copied all');
+    if (r) flash(setCopyLabel, 'Copy', r.mode === 'selection' ? 'Copied selection' : 'Copied all');
   };
   const onClear = () => tm.clear(activeId);
   const onSave = async () => {
     if (!activeId) return;
     const res = await tm.save(activeId, server ? server.name : 'server');
-    if (res && res.saved) flash(setSaveLabel, '⤓ Save', 'Saved!');
+    if (res && res.saved) flash(setSaveLabel, 'Save', 'Saved!');
   };
 
   const branchTxt = info ? ` · ⎇ ${info.branch}${info.dirty ? ' ●' : ''}` : '';
@@ -66,9 +67,9 @@ export default function TerminalPanel() {
           </span>
         </div>
         <div className="panel-actions">
-          <button className="btn btn-ghost" title="Copy selection, or all logs if nothing is selected" onClick={onCopy}>{copyLabel}</button>
-          <button className="btn btn-ghost" title="Clear the view" onClick={onClear}>✕ Clear</button>
-          <button className="btn btn-ghost" title="Save logs to a file" onClick={onSave}>{saveLabel}</button>
+          <button className="btn btn-ghost" title="Copy selection, or all logs if nothing is selected" onClick={onCopy}><FiCopy /> {copyLabel}</button>
+          <button className="btn btn-ghost" title="Clear the view" onClick={onClear}><FiX /> Clear</button>
+          <button className="btn btn-ghost" title="Save logs to a file" onClick={onSave}><FiDownload /> {saveLabel}</button>
         </div>
       </div>
       <div className="terminals">

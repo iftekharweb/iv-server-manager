@@ -202,12 +202,18 @@ Prerequisites: **Node.js** (v18+; built/tested on v22) and **npm**.
 
 ```bash
 # from the project root: C:\Users\iftek\OneDrive\Desktop\ImpleVista\custom-terminal
-npm install        # installs Electron, node-pty (prebuilt), xterm
-npm start          # launches the app in dev mode
+npm install        # Electron, node-pty (prebuilt), xterm, React, Vite
+npm run dev        # Vite dev server + Electron, with hot-reload (HMR)
 ```
 
-`npm start` runs `electron .` — the same app, loaded live from `src/`. Edit files, then
-close and re-run `npm start` to see changes. (There's no hot-reload; just relaunch.)
+The renderer is a **React + Vite** app (since v1.10.0). `npm run dev` (via `scripts/dev.js`)
+starts the Vite dev server and launches Electron pointed at it, so edits hot-reload — no
+relaunch needed. The Electron **main** process still has no hot-reload; restart `npm run dev`
+after changing anything under `src/main/`.
+
+`npm start` runs plain `electron .` against the **last built** renderer in `build/renderer/`
+(run `npm run build:renderer` first) — useful for testing a production-like renderer without
+the dev server.
 
 ---
 
@@ -219,7 +225,8 @@ Whenever you change the code and want a fresh `.exe`:
 npm run dist
 ```
 
-This runs `electron-builder --win` and produces, in `dist/`:
+This runs `vite build` (bundles the React renderer to `build/renderer/`) then
+`electron-builder --win`, and produces, in `dist/`:
 - `IV-Server-Manager-Portable.exe` (single-file portable)
 - `IV Server Manager Setup 1.0.0.exe` (installer)
 - `win-unpacked/` (folder build)
@@ -330,8 +337,12 @@ Electron splits into two worlds; they talk over **IPC**:
 - **Main process** (`src/main/`) — full Node access. Owns server lifecycle: spawns each
   server in a real pseudo-terminal (`node-pty`) in the server's folder using the chosen
   shell, streams output back, reads/writes the config file, and kills process trees.
-- **Renderer** (`src/renderer/`) — the GUI. Sandboxed (no direct Node access). It renders
-  the sidebar and an `xterm.js` terminal per server, and forwards keystrokes to the pty.
+- **Renderer** (`src/renderer/`) — the GUI, a **React + Vite** app (sandboxed, no direct Node
+  access). It renders the sidebar and forwards keystrokes to the pty. The xterm engine is kept
+  imperative in a singleton `lib/terminalManager.js` (outside React) that owns every terminal,
+  its output buffer, and IPC data/state routing; React (`store/AppStore.jsx` + `components/*`)
+  owns the chrome and declarative state and drives the manager via refs + callbacks. Built by
+  Vite to `build/renderer/`; `react-icons` provides the UI icons.
 - **Preload** (`src/preload.js`) — the only bridge. Exposes a small, safe `window.api`
   (e.g. `api.start(id)`, `api.saveServer(...)`, `api.onData(cb)`) so the renderer never
   touches Node directly. This is the secure Electron pattern (`contextIsolation: true`,

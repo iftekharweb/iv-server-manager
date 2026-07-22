@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { FiTerminal, FiX, FiChevronsRight } from 'react-icons/fi';
 import { useApp } from '../store/AppStore.jsx';
 import { terminalManager as tm } from '../lib/terminalManager.js';
 
@@ -66,16 +67,16 @@ export default function ScratchDock() {
   return (
     <section className={'scratch-dock' + (open ? '' : ' collapsed')} style={widthStyle}>
       <div className="scratch-resizer" title="Drag to resize" onMouseDown={startResize}></div>
-      <button className="scratch-rail" title="Open a terminal" onClick={expand}>⌨ Terminal</button>
+      <button className="scratch-rail" title="Open a terminal" onClick={expand}><FiTerminal /> Terminal</button>
       <div className="scratch-body">
         <div className="scratch-head">
           <div className="scratch-title">
-            <span>⌨ Terminal</span>
+            <span><FiTerminal /> Terminal</span>
             <span className="scratch-cwd">{cwd}</span>
           </div>
           <div className="scratch-actions">
-            <button className="btn btn-ghost" title="Clear" onClick={clear}>✕ Clear</button>
-            <button className="btn btn-ghost" title="Minimize" onClick={collapse}>⇥ Hide</button>
+            <button className="btn btn-ghost" title="Clear" onClick={clear}><FiX /> Clear</button>
+            <button className="btn btn-ghost" title="Minimize" onClick={collapse}><FiChevronsRight /> Hide</button>
           </div>
         </div>
         {/* Manager appends the per-server scratch .term-host children here. */}

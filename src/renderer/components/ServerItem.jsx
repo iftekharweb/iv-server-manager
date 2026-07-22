@@ -1,3 +1,5 @@
+import { FiPlay, FiRefreshCw, FiSquare, FiEdit2, FiTrash2, FiGitBranch } from 'react-icons/fi';
+import { RxDragHandleDots2 } from 'react-icons/rx';
 import { useApp } from '../store/AppStore.jsx';
 
 function dotClass(st) {
@@ -25,7 +27,7 @@ export default function ServerItem({ server: s }) {
   return (
     <li className={'server-item' + (active ? ' active' : '')} data-id={s.id} draggable onClick={onCardClick}>
       <div className="row1">
-        <span className="grip" title="Drag to reorder">⠿</span>
+        <span className="grip" title="Drag to reorder"><RxDragHandleDots2 /></span>
         <span className={'dot ' + dotClass(st)}></span>
         <span className="name" title={s.name}>{s.name}</span>
         {s.port ? (
@@ -36,16 +38,16 @@ export default function ServerItem({ server: s }) {
       <div className="cmd" title={`${s.folder} — ${s.command}`}>{s.command}</div>
       {info ? (
         <div className="branch" title={`git branch${info.dirty ? ' (uncommitted changes)' : ''}`}>
-          ⎇ {info.branch}
+          <FiGitBranch /> {info.branch}
           {info.dirty ? <span className="dirty" title="uncommitted changes"> ●</span> : null}
         </div>
       ) : null}
       <div className="actions">
-        <button className="mini" data-act="run" onClick={run}>{running ? '▶ Running' : '▶ Run'}</button>
-        <button className="mini" data-act="restart" onClick={restart}>⟳</button>
-        <button className="mini" data-act="stop" onClick={stop}>■</button>
-        <button className="mini icon" data-act="edit" title="Edit" onClick={edit}>✎</button>
-        <button className="mini icon" data-act="delete" title="Delete" onClick={del}>🗑</button>
+        <button className="mini" data-act="run" onClick={run}><FiPlay /> {running ? 'Running' : 'Run'}</button>
+        <button className="mini" data-act="restart" title="Restart" onClick={restart}><FiRefreshCw /></button>
+        <button className="mini" data-act="stop" title="Stop" onClick={stop}><FiSquare /></button>
+        <button className="mini icon" data-act="edit" title="Edit" onClick={edit}><FiEdit2 /></button>
+        <button className="mini icon" data-act="delete" title="Delete" onClick={del}><FiTrash2 /></button>
       </div>
     </li>
   );

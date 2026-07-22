@@ -1,3 +1,4 @@
+import { FiPlay, FiRefreshCw, FiSquare, FiPlus, FiSettings } from 'react-icons/fi';
 import { useApp } from '../store/AppStore.jsx';
 import UpdateBanner from './UpdateBanner.jsx';
 
@@ -26,9 +27,9 @@ export default function TopBar() {
       <UpdateBanner />
 
       <div className="top-actions">
-        <button className="btn btn-run" title="Start every server" onClick={runAll}>▶ Run All</button>
-        <button className="btn btn-restart" title="Restart every server" onClick={restartAll}>⟳ Restart All</button>
-        <button className="btn btn-stop" title="Stop every server" onClick={stopAll}>■ Stop All</button>
+        <button className="btn btn-run" title="Start every server" onClick={runAll}><FiPlay /> Run All</button>
+        <button className="btn btn-restart" title="Restart every server" onClick={restartAll}><FiRefreshCw /> Restart All</button>
+        <button className="btn btn-stop" title="Stop every server" onClick={stopAll}><FiSquare /> Stop All</button>
         <span className="divider"></span>
         <label className="shell-label">
           Default shell
@@ -45,7 +46,7 @@ export default function TopBar() {
           </select>
         </label>
         <button className="btn btn-add" title="Add a new server" onClick={() => actions.openModal(null)}>
-          + Add Server
+          <FiPlus /> Add Server
         </button>
         <button
           className="btn btn-icon"
@@ -53,7 +54,7 @@ export default function TopBar() {
           aria-label="Settings"
           onClick={() => actions.setUi({ settingsOpen: true, settingsTab: 'appearance' })}
         >
-          ⚙
+          <FiSettings />
         </button>
       </div>
     </header>

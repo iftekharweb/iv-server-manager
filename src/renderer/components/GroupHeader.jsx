@@ -1,3 +1,4 @@
+import { FiChevronRight, FiChevronDown, FiPlay, FiRefreshCw, FiSquare } from 'react-icons/fi';
 import { useApp } from '../store/AppStore.jsx';
 
 export default function GroupHeader({ name, servers }) {
@@ -19,13 +20,13 @@ export default function GroupHeader({ name, servers }) {
 
   return (
     <li className={'group-head' + (collapsed ? ' collapsed' : '')} onClick={onClick}>
-      <span className="caret">{collapsed ? '▸' : '▾'}</span>
+      <span className="caret">{collapsed ? <FiChevronRight /> : <FiChevronDown />}</span>
       <span className="group-name" title={label}>{label}</span>
       <span className="group-count">{running}/{servers.length}</span>
       <span className="group-actions">
-        <button className="mini" data-gact="run" title="Run group" onClick={() => groupAct('run')}>▶</button>
-        <button className="mini" data-gact="restart" title="Restart group" onClick={() => groupAct('restart')}>⟳</button>
-        <button className="mini" data-gact="stop" title="Stop group" onClick={() => groupAct('stop')}>■</button>
+        <button className="mini" data-gact="run" title="Run group" onClick={() => groupAct('run')}><FiPlay /></button>
+        <button className="mini" data-gact="restart" title="Restart group" onClick={() => groupAct('restart')}><FiRefreshCw /></button>
+        <button className="mini" data-gact="stop" title="Stop group" onClick={() => groupAct('stop')}><FiSquare /></button>
       </span>
     </li>
   );

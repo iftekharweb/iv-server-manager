@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { FiChevronUp, FiChevronDown, FiX } from 'react-icons/fi';
 import { useApp } from '../store/AppStore.jsx';
 import { terminalManager as tm } from '../lib/terminalManager.js';
 
@@ -60,9 +61,9 @@ export default function SearchBar() {
         onKeyDown={onKeyDown}
       />
       <span className="search-count">{countLabel}</span>
-      <button className="search-btn" title="Previous (Shift+Enter)" onClick={() => runSearch('prev', q)}>▲</button>
-      <button className="search-btn" title="Next (Enter)" onClick={() => runSearch('next', q)}>▼</button>
-      <button className="search-btn" title="Close (Esc)" onClick={close}>✕</button>
+      <button className="search-btn" title="Previous (Shift+Enter)" onClick={() => runSearch('prev', q)}><FiChevronUp /></button>
+      <button className="search-btn" title="Next (Enter)" onClick={() => runSearch('next', q)}><FiChevronDown /></button>
+      <button className="search-btn" title="Close (Esc)" onClick={close}><FiX /></button>
     </div>
   );
 }

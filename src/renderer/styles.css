@@ -135,6 +135,15 @@ html, body {
 .btn-icon { padding: 6px 9px; font-size: 14px; line-height: 1; }
 .btn-ghost { background: transparent; }
 
+/* react-icons: align inline SVGs with adjacent button/label text */
+.btn, .mini, .search-btn, .step-btn, .icon-close, .seg-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.mini { gap: 4px; }
+.branch { display: flex; align-items: center; gap: 4px; }
+.grip, .caret { display: inline-flex; align-items: center; }
+.scratch-title > span:first-child { display: inline-flex; align-items: center; gap: 6px; }
+
 .select {
   background: var(--bg-3);
   color: var(--text);

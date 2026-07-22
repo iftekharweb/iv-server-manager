@@ -188,6 +188,37 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   rows to the About grid (`src/renderer/index.html`); email is plain selectable text (the
   renderer's `openExternal` only allows http(s), so a mailto link wouldn't open). Bump → 1.9.2.
 
+## v1.10.0 changes — Renderer migrated to React + Vite
+Renderer rewritten from one ~1000-line vanilla `app.js` to a React app bundled by Vite;
+`react-icons` (Feather) replaces the unicode glyph buttons. Main process + preload + the whole
+`window.api` IPC surface are UNCHANGED — behavior is identical. Delivered in staged commits.
+- **Toolchain**: `vite.config.js` (root `src/renderer`, `base:'./'` for file://, outDir
+  `build/renderer` — NOT `dist/`, which electron-builder owns; `modulePreload.polyfill:false`).
+  `scripts/dev.js` starts Vite then spawns Electron with `VITE_DEV_SERVER_URL`. `src/main/index.js`
+  loads that URL in dev, else `build/renderer/index.html` in prod.
+- **Scripts**: `npm run dev` (Vite + Electron + HMR) for development; `npm start` loads the built
+  renderer; `build:renderer` = `vite build`; every `dist*` now runs `vite build` first.
+- **Architecture**: the xterm engine stays IMPERATIVE in a singleton
+  `src/renderer/lib/terminalManager.js` (owns all xterm instances, hosts, copy/save buffer, IPC
+  data/state routing, fit/resize, theme/font, per-server scratch, search) — because terminals
+  persist across selection (toggle `.visible`, never unmount) and are lazily created on IPC data
+  even for unselected servers, which fights React's model. React owns chrome + declarative state
+  via `store/AppStore.jsx` (Context + useReducer) and `components/*` (TopBar, UpdateBanner,
+  ServerList/ServerItem/GroupHeader, TerminalPanel/SearchBar, ScratchDock, AddEditModal,
+  SettingsModal). React feeds the manager through refs + callbacks; the manager appends into
+  empty `.term-mount`/`.scratch-mount` layers so React never reconciles manager-owned DOM.
+  StrictMode/HMR-safe (guarded init/subscribe; singleton on `globalThis`).
+- **Security**: strict CSP injected into the built `index.html` only (dev needs Vite's inline
+  react-refresh preamble); `style-src 'unsafe-inline'` for xterm's injected styles.
+- **Packaging**: `@xterm/*` + `react*` moved to devDependencies (Vite bundles them; electron-builder
+  prunes them from the shipped `node_modules`); `dependencies` now just `@lydell/node-pty` +
+  `electron-updater`. `files` ships `src/main/**` + `src/preload.js` + `build/renderer/**` (not
+  `src/renderer` sources). `asarUnpack` @lydell kept. Deleted the old `src/renderer/app.js`.
+- Verified: `vite build` clean (58 modules); full `npm run dist` packages NSIS + portable; the
+  packaged app boots with the strict CSP and NO violations/errors; asar audit shows
+  `build/renderer` present, `@xterm`/`react` absent from `node_modules`, `@lydell` node-pty intact.
+  Bump 1.9.2 → 1.10.0. (Live UI parity is a manual click-test.)
+
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
   original node-pty failed: VS Build Tools C++ workload absent).
