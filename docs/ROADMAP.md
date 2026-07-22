@@ -37,6 +37,8 @@ Roughly ordered by value vs. effort. Check items off as they ship.
 ## Larger / nice-to-have
 - [x] **Ad-hoc scratch terminal** — collapsible right-docked interactive shell for one-off
       commands (install, git switch, migrations), opens in the active server's folder/shell.
+      **Per-server & persistent (v1.9.0):** each server keeps its own scratch pty, so switching
+      projects shows that server's terminal and never interrupts a running command.
 - [ ] **Split / tiled terminals** — view multiple server logs at once.
 - [ ] **Tabs instead of single panel** — keep several terminals visible via tabs.
 - [x] **Theme options** — light theme + terminal font-size control, in a Settings modal

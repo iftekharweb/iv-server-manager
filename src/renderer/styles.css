@@ -364,8 +364,9 @@ html, body {
   max-width: 40vw;
 }
 .scratch-actions { display: flex; gap: 6px; flex: 0 0 auto; }
-.scratch-term { flex: 1 1 auto; min-height: 0; padding: 6px 4px 4px 8px; }
-.scratch-term .xterm { height: 100%; }
+/* Positioning context for the per-server scratch hosts (.term-host children,
+   which are position:absolute; inset:0 and carry their own padding). */
+.scratch-term { flex: 1 1 auto; min-height: 0; position: relative; }
 
 /* Light-theme button hues — the dark palette's pale text fails contrast on white. */
 :root[data-theme="light"] .btn-run { border-color: #2c974b; color: #116329; }

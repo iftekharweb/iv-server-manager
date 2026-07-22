@@ -87,16 +87,21 @@ class ServerManager {
   }
 
   /**
-   * Start (or restart) the ad-hoc scratch terminal: an interactive shell with no
-   * command, in the given folder. Tracked under the reserved id SCRATCH_ID and
-   * streamed through the same onData/onState pipeline.
+   * Start (or restart) an ad-hoc scratch terminal: an interactive shell with no
+   * command, in the given folder. Tracked under a per-server scratch id
+   * (`__scratch__<serverId>`, or the bare prefix for the "no server" default) and
+   * streamed through the same onData/onState pipeline. Each server keeps its own
+   * scratch pty so switching the active server never kills a running command.
+   * @param {string} scratchId  a scratch pty id (see ServerManager.isScratchId)
    * @param {"cmd"|"powershell"|"bash"} shell
    * @param {string} folder
    */
-  async startScratch(shell, folder) {
-    await this.stop(ServerManager.SCRATCH_ID);
+  async startScratch(scratchId, shell, folder) {
+    // Renderer spawns each scratch once and never respawns on switch, so this
+    // stop is a no-op in the common path; kept for idempotency.
+    await this.stop(scratchId);
     this.start({
-      id: ServerManager.SCRATCH_ID,
+      id: scratchId,
       name: 'Terminal',
       folder: folder || process.cwd(),
       command: '', // no command → interactive shell
@@ -104,8 +109,8 @@ class ServerManager {
     });
   }
 
-  stopScratch() {
-    return this.stop(ServerManager.SCRATCH_ID);
+  stopScratch(scratchId) {
+    return this.stop(scratchId);
   }
 
   /** Forward keystrokes / input from the UI into the pty. */
@@ -242,7 +247,10 @@ class ServerManager {
   }
 }
 
-// Reserved id for the ad-hoc scratch terminal (not a configured server).
+// Reserved id/prefix for ad-hoc scratch terminals (not configured servers).
+// The bare value is the default/global scratch; per-server ids append the
+// server id: `__scratch__<serverId>`.
 ServerManager.SCRATCH_ID = '__scratch__';
+ServerManager.isScratchId = (id) => typeof id === 'string' && id.startsWith('__scratch__');
 
 module.exports = ServerManager;

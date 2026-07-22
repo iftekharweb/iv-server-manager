@@ -141,6 +141,34 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   layout, segmented control, stepper, font preview, About grid all correct in dark and light.
 - Bump to 1.8.0.
 
+## v1.9.0 changes — Per-server scratch terminals
+- Fixed: switching the active project killed a command running in the scratch terminal (e.g.
+  `yarn install`). Cause: one shared scratch pty (`__scratch__`) that `selectServer` respawned
+  in the new server's folder on every switch (`autoFollowScratch` → `startScratch` →
+  `scratch.term.reset()` + `scratchStart`, and main `startScratch` did `stop(SCRATCH_ID)` then
+  respawn). Per-server *log* terminals were already safe (own xterm each; switch only toggles a
+  `.visible` class) — only the scratch dock was affected.
+- Change: the scratch terminal is now **one pty + xterm per server**, keyed
+  `__scratch__<serverId>` (bare prefix = default/global scratch when no server selected).
+  Spawned lazily on first open, shown/hidden by toggling `.visible` like the log terminals, and
+  **never respawned on switch** — so a command survives switching projects. Renderer replaced
+  the `scratch` singleton with a `scratches` Map + helpers (`scratchIdFor`, `isScratchPtyId`,
+  `ensureScratchTerm(serverId)`, `ensureScratchStarted`, `showScratch`, `syncScratchToActive`
+  replacing `autoFollowScratch`). `handleData`/`handleState` route scratch by id prefix
+  (`handleState` clears `started` on a scratch `stopped` so typing `exit` lets it respawn).
+  `forEachTerm`/`applyFontSize`/`activeSearch`/`deleteServer` updated for the Map.
+- Main: `startScratch(scratchId, shell, folder)` + `stopScratch(scratchId)` now take an id;
+  added `ServerManager.isScratchId`. IPC `scratch:start`/`scratch:stop` pass `{ id, … }`; preload
+  `scratchStart(id, shell, folder)`/`scratchStop(id)` + new `scratchPrefix`. `config:deleteServer`
+  now also stops that server's scratch pty. Quit cleanup unchanged (`stopAll` covers all ids).
+  CSS: `.scratch-term` gained `position: relative` (+ dropped its padding) so the per-server
+  `.term-host` children (absolute, inset:0) layer inside it.
+- Incidental fix: `src/renderer/app.js` had a stray NUL byte (offset 5150) in `branchKey`'s
+  template literal where a space belonged — replaced with a space (made the file read as binary).
+- Verified: `node --check` on all 4 changed JS files; dev boot clean (electron up ~9s, no
+  stderr). Interactive test matrix (switch mid-`yarn install`, delete-while-running, theme/font
+  refit, quit cleanup) left for manual GUI click-test. Bump 1.8.0 → 1.9.0.
+
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
   original node-pty failed: VS Build Tools C++ workload absent).

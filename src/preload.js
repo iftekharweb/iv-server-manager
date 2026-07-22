@@ -30,10 +30,11 @@ contextBridge.exposeInMainWorld('api', {
   sendInput: (id, data) => ipcRenderer.send('server:input', { id, data }),
   resize: (id, cols, rows) => ipcRenderer.send('server:resize', { id, cols, rows }),
 
-  // --- scratch (ad-hoc) terminal ---
-  scratchStart: (shell, folder) => ipcRenderer.invoke('scratch:start', { shell, folder }),
-  scratchStop: () => ipcRenderer.invoke('scratch:stop'),
-  scratchId: '__scratch__',
+  // --- scratch (ad-hoc) terminal (one pty per server, keyed by scratch id) ---
+  scratchStart: (id, shell, folder) => ipcRenderer.invoke('scratch:start', { id, shell, folder }),
+  scratchStop: (id) => ipcRenderer.invoke('scratch:stop', { id }),
+  scratchPrefix: '__scratch__',
+  scratchId: '__scratch__', // default/global scratch (no server selected)
 
   // --- logs / clipboard ---
   copyText: (text) => ipcRenderer.invoke('clipboard:write', text),

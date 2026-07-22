@@ -121,13 +121,15 @@ A collapsible terminal is docked on the right edge for one-off commands (install
 switch a branch, run a migration) — separate from the per-server log terminals.
 - Click the vertical **⌨ Terminal** rail on the right to expand it (drag its left edge to
   resize, up to half the window). **⇥ Hide** minimizes it back; the shell keeps running.
-- It opens in the **active server's folder** using that server's **shell** (falls back to the
-  global default shell / home dir when no server is selected).
+- **Each server has its own scratch terminal**, opened in that server's **folder** using its
+  **shell** (falls back to the global default shell / home dir when no server is selected).
 - It's a full interactive shell — type any command, Ctrl+C, etc. Anything you do that changes
   the repo (e.g. `git switch`) is reflected in that server's branch indicator within seconds.
-- Select a different server while it's open and the scratch shell **automatically reopens** in
-  that server's folder — no button needed. (While minimized it stays put, so a running command
-  isn't interrupted; it follows again the next time you expand it.) **✕ Clear** clears the view.
+- Switching to a different server shows **that server's** scratch terminal. Every scratch
+  terminal keeps running in the background — switching projects never interrupts a command
+  (e.g. a `yarn install` started under one server keeps going while you work in another). Each
+  server's scratch shell is spawned once, the first time you open the dock for it, and stays
+  alive until you delete the server or quit the app. **✕ Clear** clears the current view.
 
 ### Quitting
 - Closing the window stops **all** running servers and kills their full process trees

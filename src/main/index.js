@@ -82,6 +82,9 @@ function registerIpc() {
 
   ipcMain.handle('config:deleteServer', async (_e, id) => {
     if (manager.isRunning(id)) await manager.stop(id);
+    // Also tear down this server's ad-hoc scratch pty, if any.
+    const scratchId = ServerManager.SCRATCH_ID + id;
+    if (manager.isRunning(scratchId)) await manager.stopScratch(scratchId);
     const cfg = config.load();
     cfg.servers = cfg.servers.filter((s) => s.id !== id);
     config.save(cfg);
@@ -161,8 +164,8 @@ function registerIpc() {
   ipcMain.on('server:input', (_e, { id, data }) => manager.write(id, data));
   ipcMain.on('server:resize', (_e, { id, cols, rows }) => manager.resize(id, cols, rows));
 
-  ipcMain.handle('scratch:start', (_e, { shell, folder }) => manager.startScratch(shell, folder));
-  ipcMain.handle('scratch:stop', () => manager.stopScratch());
+  ipcMain.handle('scratch:start', (_e, { id, shell, folder }) => manager.startScratch(id, shell, folder));
+  ipcMain.handle('scratch:stop', (_e, { id }) => manager.stopScratch(id));
 
   ipcMain.handle('clipboard:write', (_e, text) => {
     clipboard.writeText(text || '');
