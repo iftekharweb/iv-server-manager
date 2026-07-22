@@ -169,6 +169,19 @@ Fixed by enabling Windows Developer Mode, then `npm run dist`. To rebuild later,
   stderr). Interactive test matrix (switch mid-`yarn install`, delete-while-running, theme/font
   refit, quit cleanup) left for manual GUI click-test. Bump 1.8.0 → 1.9.0.
 
+## v1.9.1 changes — Remove Port field from modal
+- Removed the **Port (optional)** input (and its hint) from the Add/Edit Server modal; Shell
+  is now a full-width field. `src/renderer/index.html`.
+- Port is still auto-detected from the command on save (`detectPort` — `-p/--port` flag or a
+  trailing number) so PC-wide port-freeing on Stop/Restart keeps working with no UI. Editing a
+  server preserves its existing saved port when the command yields none. Dropped the
+  `fCommand`→`fPort` auto-fill listener and `fPort` reads in `openModal`/`onSubmitServer`
+  (`src/renderer/app.js`). No changes to `config.js` (port still a valid stored field) or the
+  main-process port logic.
+- Docs: MANUAL updated (Add-a-server + "Port already in use" troubleshooting now describe
+  auto-detect, no field). Bump 1.9.0 → 1.9.1.
+- Verified: `node --check` on app.js; no remaining `fPort` references.
+
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
   original node-pty failed: VS Build Tools C++ workload absent).

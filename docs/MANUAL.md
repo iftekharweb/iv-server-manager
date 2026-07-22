@@ -49,12 +49,12 @@ You have three ways to run it. All live in the `dist/` folder after a build.
    - **Folder** — the project directory. Use **Browse…** to pick it.
    - **Command** — what to run there (e.g. `yarn dev`, `npm start`, `yarn admin`).
    - **Shell** — `cmd`, `powershell`, or `bash`.
-   - **Port** *(optional)* — the port this server listens on (e.g. `5000`). When set, the
-     app frees this port PC-wide whenever you Stop or Restart the server, so an orphaned
-     child process can't keep it bound ("port already in use"). Separate multiple with
-     commas: `5000, 5173`. If left blank, the app tries to auto-detect it from the command
-     (a `-p/--port` flag or a trailing number like `yarn dev 7003`).
 3. **Save**. The server appears in the left sidebar and is saved permanently.
+
+> **Port (automatic):** there is no Port field. The app auto-detects the port from the
+> command (a `-p/--port` flag or a trailing number like `yarn dev 7003`) and, when found,
+> frees it PC-wide whenever you Stop or Restart the server — so an orphaned child can't keep
+> it bound ("port already in use"). If the command has no port, nothing extra is freed.
 
 > **Reorder:** drag a server card (grab the ⠿ handle) up or down in the sidebar to change
 > the order. The new order is saved automatically.
@@ -383,10 +383,11 @@ git-scm.com; the app auto-detects `bash.exe` on next launch.
   folder. If the folder is missing, the app warns and falls back to the app's directory.
 
 **"Port already in use" after restarting a server**
-Set the server's **Port** field (Edit ▸ Port). On Stop/Restart the app then kills whatever
-process is listening on that port PC-wide, not just the process tree it launched — this
-clears orphaned `nodemon`/`node` children. Without a port set, only the launched tree is
-killed, which can miss a reparented child.
+The app auto-detects the port from the command (a `-p/--port` flag or a trailing number like
+`yarn dev 7003`) and, on Stop/Restart, kills whatever process is listening on it PC-wide —
+not just the launched tree — clearing orphaned `nodemon`/`node` children. If the command
+doesn't include a port, only the launched tree is killed, which can miss a reparented child;
+add the port to the command (e.g. a trailing `5000`) so it can be detected and freed.
 
 **Orphan `node`/`yarn` processes after quitting**
 Shouldn't happen — the app runs `taskkill /T` on stop and quit. If you force-kill the app

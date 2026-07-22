@@ -631,12 +631,6 @@ function wireModal() {
     const folder = await window.api.pickFolder();
     if (folder) el('fFolder').value = folder;
   });
-  // Auto-fill the port from the command (e.g. "yarn dev 7003", "next dev -p 3000")
-  // as long as the user hasn't typed a port themselves.
-  el('fCommand').addEventListener('input', () => {
-    const p = detectPort(el('fCommand').value);
-    if (p && !el('fPort').value.trim()) el('fPort').value = String(p);
-  });
   el('serverForm').addEventListener('submit', onSubmitServer);
 }
 
@@ -661,7 +655,6 @@ function openModal(server) {
   el('fCommand').value = server ? server.command : '';
   buildShellOptions(el('fShell'));
   el('fShell').value = server ? server.shell : state.config.defaultShell;
-  el('fPort').value = server ? server.port || '' : '';
   el('formError').textContent = '';
   el('modalOverlay').classList.remove('hidden');
   el('fName').focus();
@@ -680,12 +673,13 @@ async function onSubmitServer(e) {
     folder: el('fFolder').value.trim(),
     command: el('fCommand').value.trim(),
     shell: el('fShell').value,
-    port: el('fPort').value.trim(),
   };
-  if (!server.port) {
-    const p = detectPort(server.command);
-    if (p) server.port = String(p);
-  }
+  // No manual Port field anymore — auto-detect it from the command so Stop/Restart
+  // can still free the port PC-wide. Keep an existing server's saved port if the
+  // command yields none.
+  const existing = state.config.servers.find((s) => s.id === server.id);
+  const p = detectPort(server.command);
+  server.port = p ? String(p) : (existing && existing.port) || '';
   if (!server.name || !server.command) {
     el('formError').textContent = 'Name and command are required.';
     return;

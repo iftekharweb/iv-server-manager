@@ -116,20 +116,10 @@
             <span>Command</span>
             <input id="fCommand" type="text" placeholder="yarn dev" required autocomplete="off" />
           </label>
-          <div class="field-row">
-            <label class="field">
-              <span>Shell</span>
-              <select id="fShell" class="select"></select>
-            </label>
-            <label class="field">
-              <span>Port <small>(optional)</small></span>
-              <input id="fPort" type="text" placeholder="5000" autocomplete="off" />
-            </label>
-          </div>
-          <div class="field-hint">
-            Port is freed (killed PC-wide) when you Stop or Restart this server. Separate
-            multiple with commas, e.g. <code>5000, 5173</code>.
-          </div>
+          <label class="field">
+            <span>Shell</span>
+            <select id="fShell" class="select"></select>
+          </label>
           <div id="formError" class="form-error"></div>
           <div class="modal-actions">
             <button type="button" id="cancelModal" class="btn btn-ghost">Cancel</button>
