@@ -277,6 +277,11 @@ html, body {
 /* xterm fills host */
 .term-host .xterm { height: 100%; }
 
+/* Manager-owned append layers: React renders these empty and never touches
+   inside them; the TerminalManager appends .term-host children here. They fill
+   their positioned parent (.terminals / .scratch-term). */
+.term-mount, .scratch-mount { position: absolute; inset: 0; }
+
 /* ---------- Modal ---------- */
 .modal-overlay {
   position: fixed; inset: 0; background: var(--overlay);
