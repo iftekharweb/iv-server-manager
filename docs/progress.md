@@ -238,6 +238,12 @@ Renderer rewritten from one ~1000-line vanilla `app.js` to a React app bundled b
   `[data-theme=dark]` variant, `writing-mode:vertical-rl` rail, and the `.xterm` height rule;
   `npm run dev` mounts with no console errors. Bump 1.10.0 → 1.10.1. (Pixel parity = manual check.)
 
+## v1.10.2 changes — Hide terminal viewport scrollbars
+- Hid the xterm viewport scrollbar on server + scratch terminals (matched the sidebar fix from
+  1.10.1). Pure Tailwind arbitrary variants on the manager-created host in
+  `src/renderer/lib/terminalManager.js`: `[&_.xterm-viewport]:[scrollbar-width:none]` +
+  `[&_.xterm-viewport::-webkit-scrollbar]:hidden`. Wheel scroll still works. Bump 1.10.1 → 1.10.2.
+
 ## Notes
 - Swapped `node-pty` → `@lydell/node-pty` 1.2.0-beta.12 (prebuilt N-API, no VS C++ compiler needed;
   original node-pty failed: VS Build Tools C++ workload absent).

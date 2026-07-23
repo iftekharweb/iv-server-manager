@@ -184,7 +184,9 @@ class TerminalManager {
 
     const host = document.createElement('div');
     // Tailwind: fills the .term-mount layer; hidden until shown; xterm fills it.
-    host.className = 'absolute inset-0 hidden pt-1.5 pr-1 pb-1 pl-2 [&_.xterm]:h-full';
+    host.className =
+      'absolute inset-0 hidden pt-1.5 pr-1 pb-1 pl-2 [&_.xterm]:h-full ' +
+      '[&_.xterm-viewport]:[scrollbar-width:none] [&_.xterm-viewport::-webkit-scrollbar]:hidden';
     host.dataset.id = id;
     if (this.termsHost) this.termsHost.appendChild(host);
 
@@ -292,7 +294,9 @@ class TerminalManager {
 
     const ptyId = this.scratchIdFor(key);
     const host = document.createElement('div');
-    host.className = 'absolute inset-0 hidden pt-1.5 pr-1 pb-1 pl-2 [&_.xterm]:h-full';
+    host.className =
+      'absolute inset-0 hidden pt-1.5 pr-1 pb-1 pl-2 [&_.xterm]:h-full ' +
+      '[&_.xterm-viewport]:[scrollbar-width:none] [&_.xterm-viewport::-webkit-scrollbar]:hidden';
     host.dataset.id = ptyId;
     if (this.scratchHost) this.scratchHost.appendChild(host);
 
